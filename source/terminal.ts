@@ -1,4 +1,4 @@
-import { audio_play, audio_sfx_terminal } from './audio';
+import { audio_play, terminal } from './audio';
 import { _math } from './game';
 
 var terminal_text_ident = '&gt; ';
@@ -113,7 +113,7 @@ export function terminal_write_line(line, callback) {
     terminal_text_buffer.shift();
   }
   if (line) {
-    audio_play(audio_sfx_terminal);
+    audio_play(terminal);
     terminal_text_buffer.push(
       (terminal_print_ident ? terminal_text_ident : '') + line,
     );

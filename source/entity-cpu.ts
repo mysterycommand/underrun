@@ -1,7 +1,7 @@
 import entity_t from './entity';
 import entity_player_t from './entity-player';
 
-import { audio_play, audio_sfx_beep } from './audio';
+import { audio_play, beep } from './audio';
 import {
   _math,
   time_elapsed,
@@ -62,7 +62,7 @@ export default class entity_cpu_t extends entity_t {
         }
       }
 
-      audio_play(audio_sfx_beep);
+      audio_play(beep);
     }
   }
 }
