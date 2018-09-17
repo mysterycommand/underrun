@@ -82,9 +82,7 @@ function load_level(id, callback) {
   random_seed(0xbadc0de1 + id);
   load_image('l' + id, function() {
     entities = [];
-    // num_verts = 0;
     set_num_verts(0);
-    // num_lights = 0;
     set_num_lights(0);
 
     cpus_total = 0;
@@ -162,14 +160,10 @@ function load_level(id, callback) {
       }
     }
 
-    // camera_x = -entity_player.x;
     set_camera_x(-entity_player.x);
-    // camera_y = -300;
     set_camera_y(-300);
-    // camera_z = -entity_player.z - 100;
     set_camera_z(-entity_player.z - 100);
 
-    // level_num_verts = num_verts;
     set_level_num_verts(get_num_verts());
 
     terminal_show_notice(
@@ -255,19 +249,13 @@ export function game_tick() {
   }
 
   // center camera on player, apply damping
-  // camera_x = camera_x * 0.92 - entity_player.x * 0.08;
   set_camera_x(get_camera_x() * 0.92 - entity_player.x * 0.08);
-  // camera_y = camera_y * 0.92 - entity_player.y * 0.08;
   set_camera_y(get_camera_y() * 0.92 - entity_player.y * 0.08);
-  // camera_z = camera_z * 0.92 - entity_player.z * 0.08;
   set_camera_z(get_camera_z() * 0.92 - entity_player.z * 0.08);
 
   // add camera shake
-  // camera_shake *= 0.9;
   set_camera_shake(get_camera_shake() * 0.9);
-  // camera_x += camera_shake * (_math.random() - 0.5);
   set_camera_x(get_camera_x() + get_camera_shake() * (_math.random() - 0.5));
-  // camera_z += camera_shake * (_math.random() - 0.5);
   set_camera_z(get_camera_z() + get_camera_shake() * (_math.random() - 0.5));
 
   // health bar, render with plasma sprite
