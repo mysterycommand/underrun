@@ -1,4 +1,4 @@
-import { audio_play, shoot, hurt } from './audio';
+import { play, shoot, hurt } from './audio';
 import entity_t from './entity';
 import entity_plasma_t from './entity-plasma';
 import { get_camera_x, push_light } from './renderer';
@@ -46,7 +46,7 @@ export default class entity_player_t extends entity_t {
     t._last_shot -= time_elapsed;
 
     if (keys[key_shoot] && t._last_shot < 0) {
-      audio_play(shoot);
+      play(shoot);
       // prettier-ignore
       new entity_plasma_t(
         t.x, 0, t.z,
@@ -77,7 +77,7 @@ export default class entity_player_t extends entity_t {
 
   _receive_damage(from, amount) {
     if (this._last_damage < 0) {
-      audio_play(hurt);
+      play(hurt);
       super._receive_damage(from, amount);
       this._last_damage = 2;
     }

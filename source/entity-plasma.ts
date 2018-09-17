@@ -2,7 +2,7 @@ import entity_t from './entity';
 import entity_spider_t from './entity-spider';
 import entity_sentry_t from './entity-sentry';
 
-import { audio_play, hit } from './audio';
+import { play, hit } from './audio';
 import { _math } from './game';
 import { push_light } from './renderer';
 
@@ -24,7 +24,7 @@ export default class entity_plasma_t extends entity_t {
 
   _check(other) {
     if (other instanceof entity_spider_t || other instanceof entity_sentry_t) {
-      audio_play(hit);
+      play(hit);
       other._receive_damage(this, 1);
       this._kill();
     }
