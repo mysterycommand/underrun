@@ -1,4 +1,9 @@
-class entity_explosion_t extends entity_t {
+import entity_t from './entity';
+
+import { time_elapsed } from './game';
+import { push_light } from './renderer';
+
+export default class entity_explosion_t extends entity_t {
   _init() {
     this._lifetime = 1;
   }

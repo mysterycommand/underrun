@@ -1,4 +1,13 @@
-class entity_spider_t extends entity_t {
+import entity_t from './entity';
+import entity_player_t from './entity-player';
+import entity_particle_t from './entity-particle';
+import entity_explosion_t from './entity-explosion';
+
+import { audio_play, audio_sfx_explode } from './audio';
+import { _math, entity_player, time_elapsed } from './game';
+import { set_camera_shake } from './renderer';
+
+export default class entity_spider_t extends entity_t {
   _init() {
     this._animation_time = 0;
     this._select_target_counter = 0;
@@ -32,6 +41,15 @@ class entity_spider_t extends entity_t {
     this.s = 27 + (((this._animation_time * 15) | 0) % 3);
   }
 
+  _spawn_particles(amount) {
+    for (var i = 0; i < amount; i++) {
+      var particle = new entity_particle_t(this.x, 0, this.z, 1, 30);
+      particle.vx = (_math.random() - 0.5) * 128;
+      particle.vy = _math.random() * 96;
+      particle.vz = (_math.random() - 0.5) * 128;
+    }
+  }
+
   _receive_damage(from, amount) {
     super._receive_damage(from, amount);
     this.vx = from.vx;
@@ -43,11 +61,11 @@ class entity_spider_t extends entity_t {
     // slightly bounce off from other spiders to separate them
     if (other instanceof entity_spider_t) {
       var axis =
-          _math.abs(other.x - this.x) > _math.abs(other.z - this.z) ? "x" : "z",
+          _math.abs(other.x - this.x) > _math.abs(other.z - this.z) ? 'x' : 'z',
         amount = this[axis] > other[axis] ? 0.6 : -0.6;
 
-      this["v" + axis] += amount;
-      other["v" + axis] -= amount;
+      this['v' + axis] += amount;
+      other['v' + axis] -= amount;
     }
 
     // hurt player
@@ -61,7 +79,7 @@ class entity_spider_t extends entity_t {
   _kill() {
     super._kill();
     new entity_explosion_t(this.x, 0, this.z, 0, 26);
-    camera_shake = 1;
+    set_camera_shake(1);
     audio_play(audio_sfx_explode);
   }
 }

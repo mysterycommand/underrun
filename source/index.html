@@ -4,26 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <title>UNDERRUN</title>
-  <!--
- _   _ _   _______ _________________ _   _ _   _
-| | | | \ | |  _  \  ___| ___ \ ___ \ | | | \ | |
-| | | |  \| | | | | |__ | |_/ / |_/ / | | |  \| |
-| | | | . ` | | | |  __||    /|    /| | | | . ` |
-| |_| | |\  | |/ /| |___| |\ \| |\ \| |_| | |\  |
- \___/\_| \_/___/ \____/\_| \_\_| \_|\___/\_| \_/
-
-  UNDERRUN - A JS13K Game - github.com/phoboslab/underrun
-
-
-Concept, Graphics & Programming:
-	Dominic Szablewski - phoboslab.org
-
-Music:
-	Andreas Lösch - no-fate.net
-
-Still 900 bytes left and no time to do anything with them :/
-
--->
   <style>
     div:last-child {
       color: #e90;
@@ -56,16 +36,21 @@ Still 900 bytes left and no time to do anything with them :/
       overflow: hidden;
       white-space: nowrap;
       width: 94%;
-      text-shadow: 0 0 7px #f70;
+      text-shadow:  0 0 7px #f70;
       transition: opacity 1s;
     }
-  </style>
+
+    body  {
+      margin: 0;
+      background: #000;
+    }
+    </style>
 </head>
 
-<body style="margin:0;background:#000"><canvas id="c" width=320 height=180></canvas><code id="a"></code>
-  <script>
-    GAME_SOURCE
-  </script>
+<body>
+  <canvas id="c" width=320 height=180></canvas>
+  <code id="a"></code>
+  <script type="text/javascript" src="./main.js"></script>
 </body>
 
 </html>
