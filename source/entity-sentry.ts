@@ -1,27 +1,20 @@
-import entity_t from './entity';
-import entity_explosion_t from './entity-explosion';
-import entity_particle_t from './entity-particle';
-import entity_player_t from './entity-player';
+import Entity from './entity';
+import Explosion from './entity-explosion';
+import Particle from './entity-particle';
+import Player from './entity-player';
 
 import { play, explode } from './audio';
 import { _math, entity_player, time_elapsed } from './game';
 import { push_light, set_camera_shake } from './renderer';
 
-export default class entity_sentry_t extends entity_t {
-  _init() {
-    this._select_target_counter = 0;
-    this._target_x = this.x;
-    this._target_z = this.z;
-    this.h = 20;
-  }
-
-  _update() {
-    var t = this,
-      txd = t.x - t._target_x,
-      tzd = t.z - t._target_z,
-      xd = t.x - entity_player.x,
-      zd = t.z - entity_player.z,
-      dist = _math.sqrt(xd * xd + zd * zd);
+export default class Sentry extends Entity {
+  update() {
+    var t = this;
+    const txd = t.x - t._target_x;
+    const tzd = t.z - t._target_z;
+    const xd = t.x - entity_player.x;
+    const zd = t.z - entity_player.z;
+    const dist = _math.sqrt(xd * xd + zd * zd);
 
     t._select_target_counter -= time_elapsed;
 
@@ -37,12 +30,10 @@ export default class entity_sentry_t extends entity_t {
           entity_player.z - this.z,
           entity_player.x - this.x,
         );
+
+        // prettier-ignore
         new entity_sentry_plasma_t(
-          t.x,
-          0,
-          t.z,
-          0,
-          26,
+          t.x, 0, t.z, 0, 26,
           angle + _math.random() * 0.2 - 0.11,
         );
       }
@@ -56,53 +47,60 @@ export default class entity_sentry_t extends entity_t {
       t.ax = t.az = 0;
     }
 
-    super._update();
+    super.update();
   }
 
   _spawn_particles(amount) {
     for (var i = 0; i < amount; i++) {
-      var particle = new entity_particle_t(this.x, 0, this.z, 1, 30);
+      var particle = new Particle(this.x, 0, this.z, 1, 30);
       particle.vx = (_math.random() - 0.5) * 128;
       particle.vy = _math.random() * 96;
       particle.vz = (_math.random() - 0.5) * 128;
     }
   }
 
-  _receive_damage(from, amount) {
-    super._receive_damage(from, amount);
+  receiveDamage(from, amount) {
+    super.receiveDamage(from, amount);
     this.vx = from.vx * 0.1;
     this.vz = from.vz * 0.1;
     this._spawn_particles(3);
   }
 
-  _kill() {
-    super._kill();
-    new entity_explosion_t(this.x, 0, this.z, 0, 26);
+  kill() {
+    super.kill();
+    new Explosion(this.x, 0, this.z, 0, 26);
     set_camera_shake(3);
     play(explode);
   }
 }
 
-class entity_sentry_plasma_t extends entity_t {
-  _init(angle) {
+class entity_sentry_plasma_t extends Entity {
+  init(angle) {
     var speed = 64;
     this.vx = _math.cos(angle) * speed;
     this.vz = _math.sin(angle) * speed;
   }
 
-  _render() {
-    super._render();
+  render() {
+    super.render();
     push_light(this.x, 4, this.z + 6, 1.5, 0.2, 0.1, 0.04);
   }
 
-  _did_collide() {
-    this._kill();
+  didCollide() {
+    this.kill();
   }
 
-  _check(other) {
-    if (other instanceof entity_player_t) {
-      other._receive_damage(this, 1);
-      this._kill();
+  check(other) {
+    if (other instanceof Player) {
+      other.receiveDamage(this, 1);
+      this.kill();
     }
+  }
+
+  protected init() {
+    this._select_target_counter = 0;
+    this._target_x = this.x;
+    this._target_z = this.z;
+    this.h = 20;
   }
 }

@@ -59,7 +59,7 @@ export function init(callback) {
   });
 }
 
-export function play(buffer, loop) {
+export function play(buffer, loop = false) {
   const source = audioContext.createBufferSource();
   source.buffer = buffer;
   source.loop = loop;

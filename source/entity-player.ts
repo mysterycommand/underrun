@@ -1,6 +1,6 @@
 import { play, shoot, hurt } from './audio';
-import entity_t from './entity';
-import entity_plasma_t from './entity-plasma';
+import Entity from './entity';
+import Plasma from './entity-plasma';
 import { get_camera_x, push_light } from './renderer';
 
 import {
@@ -18,12 +18,8 @@ import {
 } from './game';
 import { terminal_show_notice } from './terminal';
 
-export default class entity_player_t extends entity_t {
-  _init() {
-    this._bob = this._last_shot = this._last_damage = this._frame = 0;
-  }
-
-  _update() {
+export default class Player extends Entity {
+  update() {
     var t = this;
     var speed = 128;
 
@@ -48,7 +44,7 @@ export default class entity_player_t extends entity_t {
     if (keys[key_shoot] && t._last_shot < 0) {
       play(shoot);
       // prettier-ignore
-      new entity_plasma_t(
+      new Plasma(
         t.x, 0, t.z,
         0, 26,
         angle + _math.random() * 0.2 - 0.11,
@@ -56,30 +52,34 @@ export default class entity_player_t extends entity_t {
       t._last_shot = 0.1;
     }
 
-    super._update();
+    super.update();
   }
 
-  _render() {
+  render() {
     this._frame++;
     if (this._last_damage < 0 || this._frame % 6 < 4) {
-      super._render();
+      super.render();
     }
     push_light(this.x, 4, this.z + 6, 1, 0.5, 0, 0.04);
   }
 
-  _kill() {
-    super._kill();
+  kill() {
+    super.kill();
     this.y = 10;
     this.z += 5;
     terminal_show_notice('DEPLOYMENT FAILED\n' + 'RESTORING BACKUP...');
     setTimeout(reload_level, 3000);
   }
 
-  _receive_damage(from, amount) {
+  receiveDamage(from, amount) {
     if (this._last_damage < 0) {
       play(hurt);
-      super._receive_damage(from, amount);
+      super.receiveDamage(from, amount);
       this._last_damage = 2;
     }
+  }
+
+  protected init() {
+    this._bob = this._last_shot = this._last_damage = this._frame = 0;
   }
 }

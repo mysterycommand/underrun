@@ -1,5 +1,5 @@
-import entity_t from './entity';
-import entity_player_t from './entity-player';
+import Entity from './entity';
+import Player from './entity-player';
 
 import { play, beep } from './audio';
 import {
@@ -14,12 +14,8 @@ import {
 import { push_block, push_light } from './renderer';
 import { terminal_show_notice } from './terminal';
 
-export default class entity_cpu_t extends entity_t {
-  _init() {
-    this._animation_time = 0;
-  }
-
-  _render() {
+export default class Cpu extends Entity {
+  render() {
     this._animation_time += time_elapsed;
 
     push_block(this.x, this.z, 4, 17);
@@ -31,8 +27,8 @@ export default class entity_cpu_t extends entity_t {
     push_light(this.x + 4, 4, this.z + 12, 0.2, 0.4, 1.0, intensity);
   }
 
-  _check(other) {
-    if (this.h == 5 && other instanceof entity_player_t) {
+  check(other) {
+    if (this.h == 5 && other instanceof Player) {
       this.h = 10;
       set_cpus_rebooted(get_cpus_rebooted() + 1);
 
@@ -64,5 +60,9 @@ export default class entity_cpu_t extends entity_t {
 
       play(beep);
     }
+  }
+
+  protected init() {
+    this._animation_time = 0;
   }
 }

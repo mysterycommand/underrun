@@ -1,32 +1,32 @@
-import entity_t from './entity';
-import entity_spider_t from './entity-spider';
-import entity_sentry_t from './entity-sentry';
+import Entity from './entity';
+import Spider from './entity-spider';
+import Sentry from './entity-sentry';
 
 import { play, hit } from './audio';
 import { _math } from './game';
 import { push_light } from './renderer';
 
-export default class entity_plasma_t extends entity_t {
-  _init(angle) {
-    var speed = 96;
-    this.vx = _math.cos(angle) * speed;
-    this.vz = _math.sin(angle) * speed;
-  }
-
-  _render() {
-    super._render();
+export default class Plasma extends Entity {
+  render() {
+    super.render();
     push_light(this.x, 4, this.z + 6, 0.9, 0.2, 0.1, 0.04);
   }
 
-  _did_collide() {
-    this._kill();
+  didCollide() {
+    this.kill();
   }
 
-  _check(other) {
-    if (other instanceof entity_spider_t || other instanceof entity_sentry_t) {
+  check(other) {
+    if (other instanceof Spider || other instanceof Sentry) {
       play(hit);
-      other._receive_damage(this, 1);
-      this._kill();
+      other.receiveDamage(this, 1);
+      this.kill();
     }
+  }
+
+  protected init(angle) {
+    var speed = 96;
+    this.vx = _math.cos(angle) * speed;
+    this.vz = _math.sin(angle) * speed;
   }
 }

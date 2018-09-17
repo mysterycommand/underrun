@@ -20,16 +20,17 @@ import {
 } from './renderer';
 import { terminal_show_notice, terminal_run_outro } from './terminal';
 
-import entity_cpu_t from './entity-cpu';
-import entity_health_t from './entity-health';
-import entity_player_t from './entity-player';
-import entity_sentry_t from './entity-sentry';
-import entity_spider_t from './entity-spider';
+import Entity from './entity';
+import Cpu from './entity-cpu';
+import Health from './entity-health';
+import Player from './entity-player';
+import Sentry from './entity-sentry';
+import Spider from './entity-spider';
 
-export var udef = undefined; // global undefined
-export var _math = Math;
-export var _document = document;
-var _temp;
+export const udef = undefined; // global undefined
+export const _math = Math;
+export const _document = document;
+let _temp: any;
 
 export var keys = { 37: 0, 38: 0, 39: 0, 40: 0 };
 export var key_up = 38;
@@ -59,8 +60,8 @@ export function set_cpus_rebooted(rebooted) {
 
 export var current_level = 0;
 export var entity_player;
-export var entities = [];
-export var entities_to_kill = [];
+export let entities: Entity[] = [];
+export let entitiesToKill: Entity[] = [];
 
 export function load_image(name, callback) {
   _temp = new Image();
@@ -70,7 +71,7 @@ export function load_image(name, callback) {
 
 export function next_level(callback) {
   if (current_level == 3) {
-    entities_to_kill.push(entity_player);
+    entitiesToKill.push(entity_player);
     terminal_run_outro();
   } else {
     current_level++;
@@ -122,27 +123,27 @@ function load_level(id, callback) {
 
             // enemies and items
             if (random_int(0, 16 - id * 2) == 0) {
-              new entity_spider_t(x * 8, 0, y * 8, 5, 27);
+              new Spider(x * 8, 0, y * 8, 5, 27);
             } else if (random_int(0, 100) == 0) {
-              new entity_health_t(x * 8, 0, y * 8, 5, 31);
+              new Health(x * 8, 0, y * 8, 5, 31);
             }
           }
 
           // cpu
           if (color_key === 0x00f) {
             level_data[index] = 8;
-            new entity_cpu_t(x * 8, 0, y * 8, 0, 18);
+            new Cpu(x * 8, 0, y * 8, 0, 18);
             cpus_total++;
           }
 
           // sentry
           if (color_key === 0xf00) {
-            new entity_sentry_t(x * 8, 0, y * 8, 5, 32);
+            new Sentry(x * 8, 0, y * 8, 5, 32);
           }
 
           // player start position (blue)
           if (color_key === 0x0f0) {
-            entity_player = new entity_player_t(x * 8, 0, y * 8, 5, 18);
+            entity_player = new Player(x * 8, 0, y * 8, 5, 18);
           }
         }
       }
@@ -152,11 +153,11 @@ function load_level(id, callback) {
     for (var i = 0; i < entities.length; i++) {
       var e = entities[i];
       if (
-        e instanceof entity_spider_t &&
+        e instanceof Spider &&
         _math.abs(e.x - entity_player.x) < 64 &&
         _math.abs(e.z - entity_player.z) < 64
       ) {
-        entities_to_kill.push(e);
+        entitiesToKill.push(e);
       }
     }
 
@@ -224,10 +225,10 @@ export function game_tick() {
   // update and render entities
   for (var i = 0, e1, e2; i < entities.length; i++) {
     e1 = entities[i];
-    if (e1._dead) {
+    if (e1.dead) {
       continue;
     }
-    e1._update();
+    e1.update();
 
     // check for collisions between entities - it's quadratic and nobody cares \o/
     for (var j = i + 1; j < entities.length; j++) {
@@ -240,12 +241,12 @@ export function game_tick() {
           e1.z + 9 <= e2.z
         )
       ) {
-        e1._check(e2);
-        e2._check(e1);
+        e1.check(e2);
+        e2.check(e1);
       }
     }
 
-    e1._render();
+    e1.render();
   }
 
   // center camera on player, apply damping
@@ -271,10 +272,8 @@ export function game_tick() {
   renderer_end_frame();
 
   // remove dead entities
-  entities = entities.filter(function(entity) {
-    return entities_to_kill.indexOf(entity) === -1;
-  });
-  entities_to_kill = [];
+  entities = entities.filter(entity => entitiesToKill.indexOf(entity) === -1);
+  entitiesToKill = [];
 
   requestAnimationFrame(game_tick);
 }

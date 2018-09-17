@@ -1,28 +1,28 @@
-import entity_t from './entity';
+import Entity from './entity';
 
 import { time_elapsed } from './game';
 import { push_light } from './renderer';
 
-export default class entity_explosion_t extends entity_t {
-  _init() {
-    this._lifetime = 1;
-  }
-
-  _update() {
+export default class Explosion extends Entity {
+  update() {
     this.ay = -320;
 
     if (this.y < 0) {
       this.y = 0;
       this.vy = -this.vy * 0.96;
     }
-    super._update();
+    super.update();
     this._lifetime -= time_elapsed;
     if (this._lifetime < 0) {
-      this._kill();
+      this.kill();
     }
   }
 
-  _render() {
+  render() {
     push_light(this.x, 4, this.z + 6, 1, 0.7, 0.3, 0.08 * (1 - this._lifetime));
+  }
+
+  protected init() {
+    this._lifetime = 1;
   }
 }
