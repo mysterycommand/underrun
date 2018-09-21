@@ -10,18 +10,21 @@ import { renderer_init, renderer_bind_image } from './renderer';
 
 terminal_write_line('INITIATING...');
 
-init(function() {
-  docu.onclick = function() {
+type OnLoadImage = (this: HTMLImageElement) => void;
+const onLoadImage: OnLoadImage = function() {
+  terminal_hide();
+  renderer_bind_image(this);
+  next_level(game_tick);
+};
+
+init(() => {
+  docu.onclick = () => {
     docu.onclick = null;
     terminal_cancel();
-    terminal_write_line('INITIATING...', function() {
+    terminal_write_line('INITIATING...', () => {
       renderer_init();
 
-      load_image('q2', function() {
-        terminal_hide();
-        renderer_bind_image(this);
-        next_level(game_tick);
-      });
+      load_image('q2', onLoadImage);
     });
   };
 

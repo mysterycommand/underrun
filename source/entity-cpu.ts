@@ -15,7 +15,7 @@ import { push_block, push_light } from './renderer';
 import { terminal_show_notice } from './terminal';
 
 export default class Cpu extends Entity {
-  render() {
+  public render() {
     this._animation_time += timeElapsed;
 
     push_block(this.x, this.z, 4, 17);
@@ -26,23 +26,23 @@ export default class Cpu extends Entity {
     push_light(this.x + 4, 4, this.z + 12, 0.2, 0.4, 1.0, intensity);
   }
 
-  check(other) {
+  public check(other) {
     if (this.h === 5 && other instanceof Player) {
       this.h = 10;
       set_cpus_rebooted(get_cpus_rebooted() + 1);
 
-      const reboot_message = '\n\n\nREBOOTING..._' + 'SUCCESS\n';
+      const rebootMessage = '\n\n\nREBOOTING..._' + 'SUCCESS\n';
 
       if (cpusTotal - get_cpus_rebooted() > 0) {
         terminal_show_notice(
-          reboot_message +
+          rebootMessage +
             (cpusTotal - get_cpus_rebooted()) +
             ' SYSTEM(S) STILL OFFLINE',
         );
       } else {
         if (currentLevel !== 3) {
           terminal_show_notice(
-            reboot_message +
+            rebootMessage +
               'ALL SYSTEMS ONLINE\n' +
               'TRIANGULATING POSITION FOR NEXT HOP...___' +
               'TARGET ACQUIRED\n' +
@@ -51,7 +51,7 @@ export default class Cpu extends Entity {
           );
         } else {
           terminal_show_notice(
-            reboot_message + 'ALL SYSTEMS ONLINE',
+            rebootMessage + 'ALL SYSTEMS ONLINE',
             next_level,
           );
         }

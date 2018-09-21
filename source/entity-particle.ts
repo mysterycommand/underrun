@@ -3,7 +3,7 @@ import Entity from './entity';
 import { timeElapsed } from './game';
 
 export default class Particle extends Entity {
-  update() {
+  public update() {
     this.ay = -320;
     if (this.y < 0) {
       this.y = 0;

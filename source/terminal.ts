@@ -1,8 +1,8 @@
 import { play, terminal } from './audio';
 import { math } from './game';
 
-const terminal_text_ident = '&gt; ';
-const terminal_text_title =
+const textIndent = '&gt; ';
+const textTitle =
   '' +
   'UNDERRUN\n' +
   '__ \n' +
@@ -18,11 +18,11 @@ const terminal_text_title =
   ' \n' +
   'CONNECTING...';
 
-let terminal_text_garbage =
+let textGarbage =
   '´A1e{∏éI9·NQ≥ÀΩ¸94CîyîR›kÈ¡˙ßT-;ûÅf^˛,¬›A∫Sã€«ÕÕ' +
   '1f@çX8ÎRjßf•ò√ã0êÃcÄ]Î≤moDÇ’ñ‰\\ˇ≠n=(s7É;';
 
-const terminal_text_story =
+const textStory =
   'DATE: SEP. 13, 2718 - 13:32\n' +
   'CRITICAL SOFTWARE FAILURE DETECTED\n' +
   'ANALYZING...\n' +
@@ -45,7 +45,7 @@ const terminal_text_story =
   'USE WASD OR CURSOR KEYS TO MOVE, MOUSE TO SHOOT\n' +
   'CLICK TO INITIATE YOUR DEPLOYMENT\n ';
 
-const terminal_text_outro =
+const textOutro =
   'ALL SATELLITE LINKS ONLINE\n' +
   'CONNECTING...___' +
   'CONNECTION ESTABLISHED\n' +
@@ -66,29 +66,29 @@ const terminal_text_outro =
   'DOMINIC__' +
   'END OF TRANSMISSION';
 
-let terminal_text_buffer = [];
-let terminal_line_wait = 100;
-let terminal_print_ident = true;
-let terminal_timeout_id = 0;
-let terminal_hide_timeout = 0;
+let textBuffer = [];
+let lineWait = 100;
+let printIndent = true;
+let timeoutId = 0;
+let hideTimeout = 0;
 
-terminal_text_garbage += terminal_text_garbage + terminal_text_garbage;
+textGarbage += textGarbage + textGarbage;
 
 function terminal_show() {
-  clearTimeout(terminal_hide_timeout);
+  clearTimeout(hideTimeout);
   a.style.opacity = 1;
   a.style.display = 'block';
 }
 
 export function terminal_hide() {
   a.style.opacity = 0;
-  terminal_hide_timeout = setTimeout(function() {
+  hideTimeout = setTimeout(() => {
     a.style.display = 'none';
   }, 1000);
 }
 
 export function terminal_cancel() {
-  clearTimeout(terminal_timeout_id);
+  clearTimeout(timeoutId);
 }
 
 function terminal_prepare_text(text) {
@@ -108,30 +108,26 @@ function terminal_write_text(lines, callback) {
 }
 
 export function terminal_write_line(line, callback) {
-  if (terminal_text_buffer.length > 20) {
-    terminal_text_buffer.shift();
+  if (textBuffer.length > 20) {
+    textBuffer.shift();
   }
   if (line) {
     play(terminal);
-    terminal_text_buffer.push(
-      (terminal_print_ident ? terminal_text_ident : '') + line,
-    );
+    textBuffer.push((printIndent ? textIndent : '') + line);
     a.innerHTML =
-      '<div>' +
-      terminal_text_buffer.join('&nbsp;</div><div>') +
-      '<b>█</b></div>';
+      '<div>' + textBuffer.join('&nbsp;</div><div>') + '<b>█</b></div>';
   }
-  terminal_timeout_id = setTimeout(callback, terminal_line_wait);
+  timeoutId = setTimeout(callback, lineWait);
 }
 
 export function terminal_show_notice(notice, callback) {
   a.innerHTML = '';
-  terminal_text_buffer = [];
+  textBuffer = [];
 
   terminal_cancel();
   terminal_show();
   terminal_write_text(terminal_prepare_text(notice), () => {
-    terminal_timeout_id = setTimeout(() => {
+    timeoutId = setTimeout(() => {
       terminal_hide();
       // tslint:disable-next-line no-unused-expression
       callback && callback();
@@ -140,49 +136,49 @@ export function terminal_show_notice(notice, callback) {
 }
 
 export function terminal_run_intro(callback) {
-  terminal_text_buffer = [];
-  terminal_write_text(terminal_prepare_text(terminal_text_title), () => {
-    terminal_timeout_id = setTimeout(() => {
+  textBuffer = [];
+  terminal_write_text(terminal_prepare_text(textTitle), () => {
+    timeoutId = setTimeout(() => {
       terminal_run_garbage(callback);
     }, 4000);
   });
 }
 
 function terminal_run_garbage(callback) {
-  terminal_print_ident = false;
-  terminal_line_wait = 16;
+  printIndent = false;
+  lineWait = 16;
 
-  let t = terminal_text_garbage;
-  const length = terminal_text_garbage.length;
+  let t = textGarbage;
+  const length = textGarbage.length;
 
   for (let i = 0; i < 64; i++) {
     // tslint:disable no-bitwise
     const s = (math.random() * length) | 0;
     const e = (math.random() * (length - s)) | 0;
     // tslint:enable no-bitwise
-    t += terminal_text_garbage.substr(s, e) + '\n';
+    t += textGarbage.substr(s, e) + '\n';
   }
 
   t += ' \n \n';
   terminal_write_text(terminal_prepare_text(t), () => {
-    terminal_timeout_id = setTimeout(() => {
+    timeoutId = setTimeout(() => {
       terminal_run_story(callback);
     }, 1500);
   });
 }
 
 function terminal_run_story(callback) {
-  terminal_print_ident = true;
-  terminal_line_wait = 100;
-  terminal_write_text(terminal_prepare_text(terminal_text_story), callback);
+  printIndent = true;
+  lineWait = 100;
+  terminal_write_text(terminal_prepare_text(textStory), callback);
 }
 
 export function terminal_run_outro(callback) {
   c.style.opacity = 0.3;
   a.innerHTML = '';
-  terminal_text_buffer = [];
+  textBuffer = [];
 
   terminal_cancel();
   terminal_show();
-  terminal_write_text(terminal_prepare_text(terminal_text_outro));
+  terminal_write_text(terminal_prepare_text(textOutro));
 }

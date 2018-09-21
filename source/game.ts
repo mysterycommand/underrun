@@ -101,15 +101,15 @@ function load_level(id, callback) {
       for (let x = 0; x < levelWidth; x++, index++) {
         // reduce to 12 bit color to accurately match
         // tslint:disable no-bitwise
-        const color_key =
+        const colorKey =
           ((tmp[index * 4] >> 4) << 8) +
           ((tmp[index * 4 + 1] >> 4) << 4) +
           (tmp[index * 4 + 2] >> 4);
         // tslint:enable no-bitwise
 
-        if (color_key !== 0) {
+        if (colorKey !== 0) {
           const tile = (levelData[index] =
-            color_key === 0x888 // wall
+            colorKey === 0x888 // wall
               ? random_int(0, 5) < 4
                 ? 8
                 : random_int(8, 17)
@@ -136,7 +136,7 @@ function load_level(id, callback) {
           }
 
           // cpu
-          if (color_key === 0x00f) {
+          if (colorKey === 0x00f) {
             levelData[index] = 8;
             // tslint:disable-next-line no-unused-expression
             new Cpu(x * 8, 0, y * 8, 0, 18);
@@ -144,13 +144,13 @@ function load_level(id, callback) {
           }
 
           // sentry
-          if (color_key === 0xf00) {
+          if (colorKey === 0xf00) {
             // tslint:disable-next-line no-unused-expression
             new Sentry(x * 8, 0, y * 8, 5, 32);
           }
 
           // player start position (blue)
-          if (color_key === 0x0f0) {
+          if (colorKey === 0x0f0) {
             currentPlayer = new Player(x * 8, 0, y * 8, 5, 18);
           }
         }
@@ -224,9 +224,9 @@ docu.onmouseup = ev => {
 };
 
 export function game_tick() {
-  const time_now = performance.now();
-  timeElapsed = (time_now - timeLast) / 1000;
-  timeLast = time_now;
+  const timeNow = performance.now();
+  timeElapsed = (timeNow - timeLast) / 1000;
+  timeLast = timeNow;
 
   renderer_prepare_frame();
 
