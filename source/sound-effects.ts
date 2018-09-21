@@ -1,4 +1,4 @@
-export var sound_terminal = {
+export const terminalSound = {
   osc1_oct: 6,
   osc1_det: 0,
   osc1_detune: 0,
@@ -30,7 +30,7 @@ export var sound_terminal = {
   lfo_waveform: 0,
 };
 
-export var sound_shoot = {
+export const shootSound = {
   osc1_oct: 7,
   osc1_det: 0,
   osc1_detune: 0,
@@ -62,7 +62,7 @@ export var sound_shoot = {
   lfo_waveform: 0,
 };
 
-export var sound_hit = {
+export const hitSound = {
   osc1_oct: 8,
   osc1_det: 0,
   osc1_detune: 0,
@@ -94,7 +94,7 @@ export var sound_hit = {
   lfo_waveform: 0,
 };
 
-export var sound_beep = {
+export const beepSound = {
   osc1_oct: 10,
   osc1_det: 0,
   osc1_detune: 0,
@@ -126,7 +126,7 @@ export var sound_beep = {
   lfo_waveform: 0,
 };
 
-export var sound_hurt = {
+export const hurtSound = {
   osc1_oct: 7,
   osc1_det: 3,
   osc1_detune: 140,
@@ -158,7 +158,7 @@ export var sound_hurt = {
   lfo_waveform: 2,
 };
 
-export var sound_pickup = {
+export const pickupSound = {
   osc1_oct: 5,
   osc1_det: 0,
   osc1_detune: 0,
@@ -190,7 +190,7 @@ export var sound_pickup = {
   lfo_waveform: 0,
 };
 
-export var sound_explode = {
+export const explodeSound = {
   osc1_oct: 8,
   osc1_det: 0,
   osc1_detune: 0,

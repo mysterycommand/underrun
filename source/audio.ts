@@ -2,13 +2,13 @@ import { generateSong, generateSound } from './sonantx-reduced';
 
 import { music_dark_meat_beat } from './music-dark-meat-beat';
 import {
-  sound_terminal,
-  sound_shoot,
-  sound_hit,
-  sound_beep,
-  sound_hurt,
-  sound_pickup,
-  sound_explode,
+  terminalSound,
+  shootSound,
+  hitSound,
+  beepSound,
+  hurtSound,
+  pickupSound,
+  explodeSound,
 } from './sound-effects';
 
 const audioContext = new AudioContext();
@@ -27,31 +27,31 @@ export function init(callback) {
     callback();
   });
 
-  generateSound(audioContext, sound_shoot, 140, buffer => {
+  generateSound(audioContext, shootSound, 140, buffer => {
     shoot = buffer;
   });
 
-  generateSound(audioContext, sound_hit, 134, buffer => {
+  generateSound(audioContext, hitSound, 134, buffer => {
     hit = buffer;
   });
 
-  generateSound(audioContext, sound_beep, 173, buffer => {
+  generateSound(audioContext, beepSound, 173, buffer => {
     beep = buffer;
   });
 
-  generateSound(audioContext, sound_hurt, 144, buffer => {
+  generateSound(audioContext, hurtSound, 144, buffer => {
     hurt = buffer;
   });
 
-  generateSound(audioContext, sound_pickup, 156, buffer => {
+  generateSound(audioContext, pickupSound, 156, buffer => {
     pickup = buffer;
   });
 
-  generateSound(audioContext, sound_terminal, 156, buffer => {
+  generateSound(audioContext, terminalSound, 156, buffer => {
     terminal = buffer;
   });
 
-  generateSound(audioContext, sound_explode, 114, buffer => {
+  generateSound(audioContext, explodeSound, 114, buffer => {
     explode = buffer;
   });
 }
