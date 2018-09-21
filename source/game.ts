@@ -100,10 +100,12 @@ function load_level(id, callback) {
     for (let y = 0, index = 0; y < levelHeight; y++) {
       for (let x = 0; x < levelWidth; x++, index++) {
         // reduce to 12 bit color to accurately match
+        // tslint:disable no-bitwise
         const color_key =
           ((tmp[index * 4] >> 4) << 8) +
           ((tmp[index * 4 + 1] >> 4) << 4) +
           (tmp[index * 4 + 2] >> 4);
+        // tslint:enable no-bitwise
 
         if (color_key !== 0) {
           const tile = (levelData[index] =
@@ -124,9 +126,11 @@ function load_level(id, callback) {
             push_floor(x * 8, y * 8, tile - 1);
 
             // enemies and items
-            if (random_int(0, 16 - id * 2) == 0) {
+            if (random_int(0, 16 - id * 2) === 0) {
+              // tslint:disable-next-line no-unused-expression
               new Spider(x * 8, 0, y * 8, 5, 27);
-            } else if (random_int(0, 100) == 0) {
+            } else if (random_int(0, 100) === 0) {
+              // tslint:disable-next-line no-unused-expression
               new Health(x * 8, 0, y * 8, 5, 31);
             }
           }
@@ -134,12 +138,14 @@ function load_level(id, callback) {
           // cpu
           if (color_key === 0x00f) {
             levelData[index] = 8;
+            // tslint:disable-next-line no-unused-expression
             new Cpu(x * 8, 0, y * 8, 0, 18);
             cpusTotal++;
           }
 
           // sentry
           if (color_key === 0xf00) {
+            // tslint:disable-next-line no-unused-expression
             new Sentry(x * 8, 0, y * 8, 5, 32);
           }
 
@@ -171,6 +177,7 @@ function load_level(id, callback) {
     terminal_show_notice(
       'SCANNING FOR OFFLINE SYSTEMS...___' + cpusTotal + ' SYSTEMS FOUND',
     );
+    // tslint:disable-next-line no-unused-expression
     callback && callback();
   });
 }

@@ -20,18 +20,18 @@ export default class Cpu extends Entity {
 
     push_block(this.x, this.z, 4, 17);
     const intensity =
-      this.h == 5
+      this.h === 5
         ? 0.02 + math.sin(this._animation_time * 10 + math.random() * 2) * 0.01
         : 0.01;
     push_light(this.x + 4, 4, this.z + 12, 0.2, 0.4, 1.0, intensity);
   }
 
   check(other) {
-    if (this.h == 5 && other instanceof Player) {
+    if (this.h === 5 && other instanceof Player) {
       this.h = 10;
       set_cpus_rebooted(get_cpus_rebooted() + 1);
 
-      var reboot_message = '\n\n\nREBOOTING..._' + 'SUCCESS\n';
+      const reboot_message = '\n\n\nREBOOTING..._' + 'SUCCESS\n';
 
       if (cpusTotal - get_cpus_rebooted() > 0) {
         terminal_show_notice(
@@ -40,7 +40,7 @@ export default class Cpu extends Entity {
             ' SYSTEM(S) STILL OFFLINE',
         );
       } else {
-        if (currentLevel != 3) {
+        if (currentLevel !== 3) {
           terminal_show_notice(
             reboot_message +
               'ALL SYSTEMS ONLINE\n' +

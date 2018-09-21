@@ -33,6 +33,7 @@ export default class Sentry extends Entity {
         );
 
         // prettier-ignore
+        // tslint:disable-next-line no-unused-expression
         new SentryPlasma(
           t.x, 0, t.z, 0, 26,
           angle + math.random() * 0.2 - 0.11,
@@ -67,6 +68,7 @@ export default class Sentry extends Entity {
 
   protected kill() {
     super.kill();
+    // tslint:disable-next-line no-unused-expression
     new Explosion(this.x, 0, this.z, 0, 26);
     set_camera_shake(3);
     play(explode);

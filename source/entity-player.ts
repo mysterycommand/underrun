@@ -32,6 +32,7 @@ export default class Player extends Entity {
       mouseY - (-34 + c.height * 0.8),
       mouseX - (t.x + 6 + get_camera_x() + c.width * 0.5),
     );
+    // tslint:disable-next-line no-bitwise
     t.s = (18 + (((angle / math.PI) * 4 + 10.5) % 8)) | 0;
 
     // bobbing
@@ -44,6 +45,7 @@ export default class Player extends Entity {
     if (keys[keyShoot] && t._last_shot < 0) {
       play(shoot);
       // prettier-ignore
+      // tslint:disable-next-line no-unused-expression
       new Plasma(
         t.x, 0, t.z, 0, 26,
         angle + math.random() * 0.2 - 0.11,

@@ -102,6 +102,7 @@ function terminal_write_text(lines, callback) {
       terminal_write_text.bind(this, lines, callback),
     );
   } else {
+    // tslint:disable-next-line no-unused-expression
     callback && callback();
   }
 }
@@ -132,6 +133,7 @@ export function terminal_show_notice(notice, callback) {
   terminal_write_text(terminal_prepare_text(notice), () => {
     terminal_timeout_id = setTimeout(() => {
       terminal_hide();
+      // tslint:disable-next-line no-unused-expression
       callback && callback();
     }, 2000);
   });
@@ -154,8 +156,10 @@ function terminal_run_garbage(callback) {
   const length = terminal_text_garbage.length;
 
   for (let i = 0; i < 64; i++) {
+    // tslint:disable no-bitwise
     const s = (math.random() * length) | 0;
     const e = (math.random() * (length - s)) | 0;
+    // tslint:enable no-bitwise
     t += terminal_text_garbage.substr(s, e) + '\n';
   }
 
