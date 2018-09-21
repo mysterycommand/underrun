@@ -1,7 +1,7 @@
 import { play, shoot, hurt } from './audio';
 import Entity from './entity';
 import Plasma from './entity-plasma';
-import { get_camera_x, push_light } from './renderer';
+import { c, get_camera_x, push_light } from './renderer';
 
 import {
   math,

@@ -3,7 +3,10 @@ import { udef } from './game';
 import vertex_shader from './s/vert.glsl';
 import fragment_shader from './s/frag.glsl';
 
-const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+export const c = document.getElementById('c') as HTMLCanvasElement;
+export const a = document.getElementById('a') as HTMLSpanElement;
+
+const gl = c.getContext('webgl') as WebGLRenderingContext;
 let vertexBuffer;
 let shaderProgram;
 

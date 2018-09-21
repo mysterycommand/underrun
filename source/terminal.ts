@@ -1,5 +1,6 @@
 import { play, terminal } from './audio';
 import { math } from './game';
+import { c, a } from './renderer';
 
 const textIndent = '&gt; ';
 const textTitle =
@@ -76,12 +77,12 @@ textGarbage += textGarbage + textGarbage;
 
 function terminal_show() {
   clearTimeout(hideTimeout);
-  a.style.opacity = 1;
+  a.style.opacity = '1';
   a.style.display = 'block';
 }
 
 export function terminal_hide() {
-  a.style.opacity = 0;
+  a.style.opacity = '0';
   hideTimeout = setTimeout(() => {
     a.style.display = 'none';
   }, 1000);
@@ -173,7 +174,7 @@ function terminal_run_story(callback) {
 }
 
 export function terminal_run_outro() {
-  c.style.opacity = 0.3;
+  c.style.opacity = '0.3';
   a.innerHTML = '';
   textBuffer = [];
 

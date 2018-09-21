@@ -1,5 +1,6 @@
 import { random_int, random_seed, array_rand } from './random';
 import {
+  c,
   get_num_verts,
   set_num_verts,
   set_level_num_verts,
