@@ -1,25 +1,25 @@
-import { random_int, random_seed, array_rand } from './random';
+import { randomInt, randomSeed, randomArray } from './random';
 import {
   c,
-  get_num_verts,
-  set_num_verts,
-  set_level_num_verts,
-  set_num_lights,
+  getNumVerts,
+  setNumVerts,
+  setLevelNumVerts,
+  setNumLights,
   pushBlock,
-  push_floor,
-  push_sprite,
-  get_camera_x,
-  set_camera_x,
-  get_camera_y,
-  set_camera_y,
-  get_camera_z,
-  set_camera_z,
-  get_camera_shake,
-  set_camera_shake,
-  renderer_prepare_frame,
-  renderer_end_frame,
+  pushFloor,
+  pushSprite,
+  getCameraX,
+  setCameraX,
+  getCameraY,
+  setCameraY,
+  getCameraZ,
+  setCameraZ,
+  getCameraShake,
+  setCameraShake,
+  prepareFrame,
+  endFrame,
 } from './renderer';
-import { showNotice, terminal_run_outro } from './terminal';
+import { showNotice, runOutro } from './terminal';
 
 import Entity from './entity';
 import Cpu from './entity-cpu';
@@ -68,28 +68,28 @@ export let entitiesToKill: Entity[] = [];
 
 export type OnLoadImageCallback = (this: HTMLImageElement) => void;
 
-export function load_image(name, callback: OnLoadImageCallback) {
+export function loadImage(name, callback: OnLoadImageCallback) {
   tmp = new Image();
   tmp.src = 'm/' + name + '.png';
   tmp.onload = callback;
 }
 
-export function next_level(callback?: () => void) {
+export function nextLevel(callback?: () => void) {
   if (currentLevel === 3) {
     entitiesToKill.push(currentPlayer);
-    terminal_run_outro();
+    runOutro();
   } else {
     currentLevel++;
-    load_level(currentLevel, callback);
+    loadLevel(currentLevel, callback);
   }
 }
 
-function load_level(id, callback?: () => void) {
-  random_seed(0xbadc0de1 + id);
-  load_image('l' + id, function() {
+function loadLevel(id, callback?: () => void) {
+  randomSeed(0xbadc0de1 + id);
+  loadImage('l' + id, function() {
     entities = [];
-    set_num_verts(0);
-    set_num_lights(0);
+    setNumVerts(0);
+    setNumLights(0);
 
     cpusTotal = 0;
     cpusRebooted = 0;
@@ -113,11 +113,11 @@ function load_level(id, callback?: () => void) {
         if (colorKey !== 0) {
           const tile = (levelData[index] =
             colorKey === 0x888 // wall
-              ? random_int(0, 5) < 4
+              ? randomInt(0, 5) < 4
                 ? 8
-                : random_int(8, 17)
+                : randomInt(8, 17)
               : // prettier-ignore
-                array_rand([
+                randomArray([
                   1, 1, 1, 1, 1, 3, 3, 2, 5, 5, 5, 5, 5, 5, 7, 7, 6
                 ])); // floor
 
@@ -126,13 +126,13 @@ function load_level(id, callback?: () => void) {
             pushBlock(x * 8, y * 8, 4, tile - 1);
           } else if (tile > 0) {
             // floor
-            push_floor(x * 8, y * 8, tile - 1);
+            pushFloor(x * 8, y * 8, tile - 1);
 
             // enemies and items
-            if (random_int(0, 16 - id * 2) === 0) {
+            if (randomInt(0, 16 - id * 2) === 0) {
               // tslint:disable-next-line no-unused-expression
               new Spider(x * 8, 0, y * 8, 5, 27);
-            } else if (random_int(0, 100) === 0) {
+            } else if (randomInt(0, 100) === 0) {
               // tslint:disable-next-line no-unused-expression
               new Health(x * 8, 0, y * 8, 5, 31);
             }
@@ -171,11 +171,11 @@ function load_level(id, callback?: () => void) {
       }
     }
 
-    set_camera_x(-currentPlayer.x);
-    set_camera_y(-300);
-    set_camera_z(-currentPlayer.z - 100);
+    setCameraX(-currentPlayer.x);
+    setCameraY(-300);
+    setCameraZ(-currentPlayer.z - 100);
 
-    set_level_num_verts(get_num_verts());
+    setLevelNumVerts(getNumVerts());
 
     showNotice(
       'SCANNING FOR OFFLINE SYSTEMS...___' + cpusTotal + ' SYSTEMS FOUND',
@@ -185,8 +185,8 @@ function load_level(id, callback?: () => void) {
   });
 }
 
-export function reload_level() {
-  load_level(currentLevel);
+export function reloadLevel() {
+  loadLevel(currentLevel);
 }
 
 function preventDefault(ev) {
@@ -226,12 +226,12 @@ docu.onmouseup = ev => {
   preventDefault(ev);
 };
 
-export function game_tick() {
+export function gameTick() {
   const timeNow = performance.now();
   timeElapsed = (timeNow - timeLast) / 1000;
   timeLast = timeNow;
 
-  renderer_prepare_frame();
+  prepareFrame();
 
   // update and render entities
   for (let i = 0, e1, e2; i < entities.length; i++) {
@@ -261,30 +261,30 @@ export function game_tick() {
   }
 
   // center camera on player, apply damping
-  set_camera_x(get_camera_x() * 0.92 - currentPlayer.x * 0.08);
-  set_camera_y(get_camera_y() * 0.92 - currentPlayer.y * 0.08);
-  set_camera_z(get_camera_z() * 0.92 - currentPlayer.z * 0.08);
+  setCameraX(getCameraX() * 0.92 - currentPlayer.x * 0.08);
+  setCameraY(getCameraY() * 0.92 - currentPlayer.y * 0.08);
+  setCameraZ(getCameraZ() * 0.92 - currentPlayer.z * 0.08);
 
   // add camera shake
-  set_camera_shake(get_camera_shake() * 0.9);
-  set_camera_x(get_camera_x() + get_camera_shake() * (math.random() - 0.5));
-  set_camera_z(get_camera_z() + get_camera_shake() * (math.random() - 0.5));
+  setCameraShake(getCameraShake() * 0.9);
+  setCameraX(getCameraX() + getCameraShake() * (math.random() - 0.5));
+  setCameraZ(getCameraZ() + getCameraShake() * (math.random() - 0.5));
 
   // health bar, render with plasma sprite
   for (let i = 0; i < currentPlayer.h; i++) {
-    push_sprite(
-      -get_camera_x() - 50 + i * 4,
-      29 - get_camera_y(),
-      -get_camera_z() - 30,
+    pushSprite(
+      -getCameraX() - 50 + i * 4,
+      29 - getCameraY(),
+      -getCameraZ() - 30,
       26,
     );
   }
 
-  renderer_end_frame();
+  endFrame();
 
   // remove dead entities
-  entities = entities.filter(entity => entitiesToKill.indexOf(entity) === -1);
+  entities = entities.filter(entity => !entitiesToKill.includes(entity));
   entitiesToKill = [];
 
-  requestAnimationFrame(game_tick);
+  requestAnimationFrame(gameTick);
 }

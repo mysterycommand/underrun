@@ -1,7 +1,7 @@
 let randHigh;
 let randLow;
 
-export function random_int(min, max) {
+export function randomInt(min, max) {
   // tslint:disable no-bitwise
   randHigh = ((randHigh << 16) + (randHigh >> 16) + randLow) & 0xffffffff;
   randLow = (randLow + randHigh) & 0xffffffff;
@@ -10,12 +10,12 @@ export function random_int(min, max) {
   // tslint:enable no-bitwise
 }
 
-export function random_seed(seed) {
+export function randomSeed(seed) {
   randHigh = seed || 0xbadc0ffe;
   // tslint:disable-next-line no-bitwise
   randLow = seed ^ 0x49616e42;
 }
 
-export function array_rand(array) {
-  return array[random_int(0, array.length - 1)];
+export function randomArray(array) {
+  return array[randomInt(0, array.length - 1)];
 }

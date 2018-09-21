@@ -5,7 +5,7 @@ import Explosion from './entity-explosion';
 
 import { play, explode } from './audio';
 import { math, currentPlayer, timeElapsed } from './game';
-import { set_camera_shake } from './renderer';
+import { setCameraShake } from './renderer';
 
 export default class Spider extends Entity {
   private animationTime: number = 0;
@@ -71,7 +71,7 @@ export default class Spider extends Entity {
     super.kill();
     // tslint:disable-next-line no-unused-expression
     new Explosion(this.x, 0, this.z, 0, 26);
-    set_camera_shake(1);
+    setCameraShake(1);
     play(explode);
   }
 

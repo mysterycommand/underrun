@@ -6,7 +6,7 @@ import {
   levelData,
   levelWidth,
 } from './game';
-import { push_sprite } from './renderer';
+import { pushSprite } from './renderer';
 
 export default class Entity {
   public vx: number = 0;
@@ -73,7 +73,7 @@ export default class Entity {
   public render() {
     // render
     const t = this;
-    push_sprite(t.x - 1, t.y, t.z, t.s);
+    pushSprite(t.x - 1, t.y, t.z, t.s);
   }
 
   // separate init() method, because "constructor" cannot be uglyfied

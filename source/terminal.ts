@@ -75,39 +75,37 @@ let hideTimeout = 0;
 
 textGarbage += textGarbage + textGarbage;
 
-function terminal_show() {
+function show() {
   clearTimeout(hideTimeout);
   a.style.opacity = '1';
   a.style.display = 'block';
 }
 
-export function terminal_hide() {
+export function hide() {
   a.style.opacity = '0';
   hideTimeout = setTimeout(() => {
     a.style.display = 'none';
   }, 1000);
 }
 
-export function terminal_cancel() {
+export function cancel() {
   clearTimeout(timeoutId);
 }
 
-function terminal_prepare_text(text) {
+function prepareText(text) {
   return text.replace(/_/g, '\n'.repeat(10)).split('\n');
 }
 
-function terminal_write_text(lines, callback?: () => void) {
+function writeText(lines, callback?: () => void) {
   if (lines.length) {
-    terminal_write_line(lines.shift(), () =>
-      terminal_write_text(lines, callback),
-    );
+    writeLine(lines.shift(), () => writeText(lines, callback));
   } else {
     // tslint:disable-next-line no-unused-expression
     callback && callback();
   }
 }
 
-export function terminal_write_line(line, callback?: () => void) {
+export function writeLine(line, callback?: () => void) {
   if (textBuffer.length > 20) {
     textBuffer.shift();
   }
@@ -124,27 +122,27 @@ export function showNotice(notice, callback?: () => void) {
   a.innerHTML = '';
   textBuffer = [];
 
-  terminal_cancel();
-  terminal_show();
-  terminal_write_text(terminal_prepare_text(notice), () => {
+  cancel();
+  show();
+  writeText(prepareText(notice), () => {
     timeoutId = setTimeout(() => {
-      terminal_hide();
+      hide();
       // tslint:disable-next-line no-unused-expression
       callback && callback();
     }, 2000);
   });
 }
 
-export function terminal_run_intro(callback?: () => void) {
+export function runIntro(callback?: () => void) {
   textBuffer = [];
-  terminal_write_text(terminal_prepare_text(textTitle), () => {
+  writeText(prepareText(textTitle), () => {
     timeoutId = setTimeout(() => {
-      terminal_run_garbage(callback);
+      runGarbage(callback);
     }, 4000);
   });
 }
 
-function terminal_run_garbage(callback) {
+function runGarbage(callback) {
   printIndent = false;
   lineWait = 16;
 
@@ -160,25 +158,25 @@ function terminal_run_garbage(callback) {
   }
 
   t += ' \n \n';
-  terminal_write_text(terminal_prepare_text(t), () => {
+  writeText(prepareText(t), () => {
     timeoutId = setTimeout(() => {
-      terminal_run_story(callback);
+      runStory(callback);
     }, 1500);
   });
 }
 
-function terminal_run_story(callback) {
+function runStory(callback) {
   printIndent = true;
   lineWait = 100;
-  terminal_write_text(terminal_prepare_text(textStory), callback);
+  writeText(prepareText(textStory), callback);
 }
 
-export function terminal_run_outro() {
+export function runOutro() {
   c.style.opacity = '0.3';
   a.innerHTML = '';
   textBuffer = [];
 
-  terminal_cancel();
-  terminal_show();
-  terminal_write_text(terminal_prepare_text(textOutro));
+  cancel();
+  show();
+  writeText(prepareText(textOutro));
 }

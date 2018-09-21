@@ -8,7 +8,7 @@ import {
   getCpusRebooted,
   setCpusRebooted,
   cpusTotal,
-  next_level,
+  nextLevel,
   currentLevel,
 } from './game';
 import { pushBlock, pushLight } from './renderer';
@@ -49,10 +49,10 @@ export default class Cpu extends Entity {
               'TRIANGULATING POSITION FOR NEXT HOP...___' +
               'TARGET ACQUIRED\n' +
               'JUMPING...',
-            next_level,
+            nextLevel,
           );
         } else {
-          showNotice(rebootMessage + 'ALL SYSTEMS ONLINE', next_level);
+          showNotice(rebootMessage + 'ALL SYSTEMS ONLINE', nextLevel);
         }
       }
 

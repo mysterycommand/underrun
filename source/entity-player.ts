@@ -1,7 +1,7 @@
 import { play, shoot, hurt } from './audio';
 import Entity from './entity';
 import Plasma from './entity-plasma';
-import { c, get_camera_x, pushLight } from './renderer';
+import { c, getCameraX, pushLight } from './renderer';
 
 import {
   math,
@@ -14,7 +14,7 @@ import {
   keyShoot,
   mouseX,
   mouseY,
-  reload_level,
+  reloadLevel,
 } from './game';
 import { showNotice } from './terminal';
 
@@ -35,7 +35,7 @@ export default class Player extends Entity {
     // rotation - select appropriate sprite
     const angle = math.atan2(
       mouseY - (-34 + c.height * 0.8),
-      mouseX - (t.x + 6 + get_camera_x() + c.width * 0.5),
+      mouseX - (t.x + 6 + getCameraX() + c.width * 0.5),
     );
     // tslint:disable-next-line no-bitwise
     t.s = (18 + (((angle / math.PI) * 4 + 10.5) % 8)) | 0;
@@ -82,6 +82,6 @@ export default class Player extends Entity {
     this.y = 10;
     this.z += 5;
     showNotice('DEPLOYMENT FAILED\n' + 'RESTORING BACKUP...');
-    setTimeout(reload_level, 3000);
+    setTimeout(reloadLevel, 3000);
   }
 }

@@ -21,7 +21,7 @@ export let pickup;
 export let terminal;
 export let explode;
 
-export function init(callback) {
+export function initAudio(callback) {
   generateSong(audioContext, darkMeatBeat, buffer => {
     play(buffer, true);
     callback();

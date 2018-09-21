@@ -1,7 +1,7 @@
 import { udef } from './game';
 
-import vertex_shader from './s/vert.glsl';
-import fragment_shader from './s/frag.glsl';
+import vertexShader from './s/vert.glsl';
+import fragmentShader from './s/frag.glsl';
 
 export const c = document.getElementById('c') as HTMLCanvasElement;
 export const a = document.getElementById('a') as HTMLSpanElement;
@@ -18,18 +18,15 @@ const pxNudge = 0.5 / textureSize;
 const maxVerts = 1024 * 64;
 
 let numVerts = 0;
-export function get_num_verts() {
+export function getNumVerts() {
   return numVerts;
 }
-export function set_num_verts(verts) {
+export function setNumVerts(verts) {
   numVerts = verts;
 }
 
 let levelNumVerts;
-export function get_level_num_verts() {
-  return levelNumVerts;
-}
-export function set_level_num_verts(verts) {
+export function setLevelNumVerts(verts) {
   levelNumVerts = verts;
 }
 
@@ -40,10 +37,7 @@ let lightUniform;
 const maxLights = 32;
 
 let numLights = 0;
-export function get_num_lights() {
-  return numLights;
-}
-export function set_num_lights(lights) {
+export function setNumLights(lights) {
   numLights = lights;
 }
 
@@ -51,40 +45,40 @@ export function set_num_lights(lights) {
 const lightData = new Float32Array(maxLights * 7);
 
 let cameraX = 0;
-export function get_camera_x() {
+export function getCameraX() {
   return cameraX;
 }
-export function set_camera_x(x) {
+export function setCameraX(x) {
   cameraX = x;
 }
 
 let cameraY = 0;
-export function get_camera_y() {
+export function getCameraY() {
   return cameraY;
 }
-export function set_camera_y(y) {
+export function setCameraY(y) {
   cameraY = y;
 }
 
 let cameraZ = 0;
-export function get_camera_z() {
+export function getCameraZ() {
   return cameraZ;
 }
-export function set_camera_z(z) {
+export function setCameraZ(z) {
   cameraZ = z;
 }
 
 let cameraShake = 0;
-export function get_camera_shake() {
+export function getCameraShake() {
   return cameraShake;
 }
-export function set_camera_shake(shake) {
+export function setCameraShake(shake) {
   cameraShake = shake;
 }
 
 let cameraUniform;
 
-export function renderer_init() {
+export function initRenderer() {
   // Create shorthand WebGL function names
   // var webglShortFunctionNames = {};
   for (const name in gl) {
@@ -103,16 +97,13 @@ export function renderer_init() {
   gl.bufferData(gl.ARRAY_BUFFER, bufferData, gl.DYNAMIC_DRAW);
 
   shaderProgram = gl.createProgram();
+  gl.attachShader(shaderProgram, compileShader(gl.VERTEX_SHADER, vertexShader));
   gl.attachShader(
     shaderProgram,
-    compile_shader(gl.VERTEX_SHADER, vertex_shader),
-  );
-  gl.attachShader(
-    shaderProgram,
-    compile_shader(gl.FRAGMENT_SHADER, fragment_shader),
+    compileShader(gl.FRAGMENT_SHADER, fragmentShader),
   );
   gl.linkProgram(shaderProgram);
-  // console.log({ programInfoLog: gl.getProgramInfoLog(shader_program) });
+  // console.log({ programInfoLog: gl.getProgramInfoLog(shaderProgram) });
 
   gl.useProgram(shaderProgram);
 
@@ -124,12 +115,12 @@ export function renderer_init() {
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   gl.viewport(0, 0, c.width, c.height);
 
-  enable_vertex_attrib('p', 3, 8, 0);
-  enable_vertex_attrib('uv', 2, 8, 3);
-  enable_vertex_attrib('n', 3, 8, 5);
+  enableVertexAttrib('p', 3, 8, 0);
+  enableVertexAttrib('uv', 2, 8, 3);
+  enableVertexAttrib('n', 3, 8, 5);
 }
 
-export function renderer_bind_image(image) {
+export function bindImage(image) {
   const texture2d = gl.TEXTURE_2D;
 
   gl.bindTexture(texture2d, gl.createTexture());
@@ -141,7 +132,7 @@ export function renderer_bind_image(image) {
   gl.texParameteri(texture2d, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 }
 
-export function renderer_prepare_frame() {
+export function prepareFrame() {
   numVerts = levelNumVerts;
   numLights = 0;
 
@@ -149,7 +140,7 @@ export function renderer_prepare_frame() {
   lightData.fill(1);
 }
 
-export function renderer_end_frame() {
+export function endFrame() {
   gl.uniform3f(cameraUniform, cameraX, cameraY - 10, cameraZ - 30);
   gl.uniform1fv(lightUniform, lightData);
 
@@ -162,7 +153,7 @@ export function renderer_end_frame() {
 }
 
 // prettier-ignore
-function push_quad(
+function pushQuad(
   x1, y1, z1,
   x2, y2, z2,
   x3, y3, z3,
@@ -186,12 +177,12 @@ function push_quad(
   numVerts += 6;
 }
 
-export function push_sprite(x, y, z, tile) {
+export function pushSprite(x, y, z, tile) {
   // tilt sprite when closer to camera
   const tilt = 3 + (cameraZ + z) / 12;
 
   // prettier-ignore
-  push_quad(
+  pushQuad(
     x, y + 6, z,
     x + 6, y + 6, z,
     x, y, z + tilt,
@@ -201,9 +192,9 @@ export function push_sprite(x, y, z, tile) {
   );
 }
 
-export function push_floor(x, z, tile) {
+export function pushFloor(x, z, tile) {
   // prettier-ignore
-  push_quad(
+  pushQuad(
     x, 0, z, x + 8,
     0, z, x, 0,
     z + 8, x + 8, 0,
@@ -218,7 +209,7 @@ export function pushBlock(x, z, tileTop, tileSites) {
   const y = ~[8, 9, 17].indexOf(tileSites) ? 16 : 8;
 
   // prettier-ignore
-  push_quad(
+  pushQuad(
     x, y, z,
     x + 8, y, z,
     x, y, z + 8,
@@ -228,7 +219,7 @@ export function pushBlock(x, z, tileTop, tileSites) {
   ); // top
 
   // prettier-ignore
-  push_quad(
+  pushQuad(
     x + 8, y, z,
     x + 8, y, z + 8,
     x + 8, 0, z,
@@ -238,7 +229,7 @@ export function pushBlock(x, z, tileTop, tileSites) {
   ); // right
 
   // prettier-ignore
-  push_quad(
+  pushQuad(
     x, y, z + 8,
     x + 8, y, z + 8,
     x, 0, z + 8,
@@ -248,7 +239,7 @@ export function pushBlock(x, z, tileTop, tileSites) {
   ); // front
 
   // prettier-ignore
-  push_quad(
+  pushQuad(
     x, y, z,
     x, y, z + 8,
     x, 0, z,
@@ -271,7 +262,7 @@ export function pushLight(x, y, z, r, g, b, falloff) {
   }
 }
 
-function compile_shader(type, source) {
+function compileShader(type, source) {
   const shader = gl.createShader(type);
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -279,7 +270,7 @@ function compile_shader(type, source) {
   return shader;
 }
 
-function enable_vertex_attrib(name, count, size, offset) {
+function enableVertexAttrib(name, count, size, offset) {
   const location = gl.getAttribLocation(shaderProgram, name);
   gl.enableVertexAttribArray(location);
   gl.vertexAttribPointer(

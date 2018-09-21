@@ -5,7 +5,7 @@ import SentryPlasma from './entity-sentry-plasma';
 
 import { play, explode } from './audio';
 import { math, currentPlayer, timeElapsed } from './game';
-import { set_camera_shake } from './renderer';
+import { setCameraShake } from './renderer';
 
 export default class Sentry extends Entity {
   public h = 20;
@@ -68,7 +68,7 @@ export default class Sentry extends Entity {
     super.kill();
     // tslint:disable-next-line no-unused-expression
     new Explosion(this.x, 0, this.z, 0, 26);
-    set_camera_shake(3);
+    setCameraShake(3);
     play(explode);
   }
 
