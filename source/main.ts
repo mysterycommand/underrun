@@ -1,5 +1,11 @@
 import { init } from './audio';
-import { docu, load_image, next_level, game_tick } from './game';
+import {
+  docu,
+  OnLoadImageCallback,
+  load_image,
+  next_level,
+  game_tick,
+} from './game';
 import {
   terminal_write_line,
   terminal_cancel,
@@ -10,8 +16,7 @@ import { renderer_init, renderer_bind_image } from './renderer';
 
 terminal_write_line('INITIATING...');
 
-type OnLoadImage = (this: HTMLImageElement) => void;
-const onLoadImage: OnLoadImage = function() {
+const onLoadImage: OnLoadImageCallback = function() {
   terminal_hide();
   renderer_bind_image(this);
   next_level(game_tick);

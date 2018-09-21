@@ -15,13 +15,15 @@ import { push_block, push_light } from './renderer';
 import { terminal_show_notice } from './terminal';
 
 export default class Cpu extends Entity {
+  private animationTime = 0;
+
   public render() {
-    this._animation_time += timeElapsed;
+    this.animationTime += timeElapsed;
 
     push_block(this.x, this.z, 4, 17);
     const intensity =
       this.h === 5
-        ? 0.02 + math.sin(this._animation_time * 10 + math.random() * 2) * 0.01
+        ? 0.02 + math.sin(this.animationTime * 10 + math.random() * 2) * 0.01
         : 0.01;
     push_light(this.x + 4, 4, this.z + 12, 0.2, 0.4, 1.0, intensity);
   }
@@ -59,9 +61,5 @@ export default class Cpu extends Entity {
 
       play(beep);
     }
-  }
-
-  protected init() {
-    this._animation_time = 0;
   }
 }

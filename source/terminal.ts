@@ -66,7 +66,7 @@ const textOutro =
   'DOMINIC__' +
   'END OF TRANSMISSION';
 
-let textBuffer = [];
+let textBuffer: string[] = [];
 let lineWait = 100;
 let printIndent = true;
 let timeoutId = 0;
@@ -95,11 +95,10 @@ function terminal_prepare_text(text) {
   return text.replace(/_/g, '\n'.repeat(10)).split('\n');
 }
 
-function terminal_write_text(lines, callback) {
+function terminal_write_text(lines, callback?: () => void) {
   if (lines.length) {
-    terminal_write_line(
-      lines.shift(),
-      terminal_write_text.bind(this, lines, callback),
+    terminal_write_line(lines.shift(), () =>
+      terminal_write_text(lines, callback),
     );
   } else {
     // tslint:disable-next-line no-unused-expression
@@ -107,7 +106,7 @@ function terminal_write_text(lines, callback) {
   }
 }
 
-export function terminal_write_line(line, callback) {
+export function terminal_write_line(line, callback?: () => void) {
   if (textBuffer.length > 20) {
     textBuffer.shift();
   }
@@ -120,7 +119,7 @@ export function terminal_write_line(line, callback) {
   timeoutId = setTimeout(callback, lineWait);
 }
 
-export function terminal_show_notice(notice, callback) {
+export function terminal_show_notice(notice, callback?: () => void) {
   a.innerHTML = '';
   textBuffer = [];
 
@@ -135,7 +134,7 @@ export function terminal_show_notice(notice, callback) {
   });
 }
 
-export function terminal_run_intro(callback) {
+export function terminal_run_intro(callback?: () => void) {
   textBuffer = [];
   terminal_write_text(terminal_prepare_text(textTitle), () => {
     timeoutId = setTimeout(() => {
@@ -173,7 +172,7 @@ function terminal_run_story(callback) {
   terminal_write_text(terminal_prepare_text(textStory), callback);
 }
 
-export function terminal_run_outro(callback) {
+export function terminal_run_outro() {
   c.style.opacity = 0.3;
   a.innerHTML = '';
   textBuffer = [];

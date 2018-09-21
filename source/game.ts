@@ -65,13 +65,15 @@ export let currentPlayer;
 export let entities: Entity[] = [];
 export let entitiesToKill: Entity[] = [];
 
-export function load_image(name, callback) {
+export type OnLoadImageCallback = (this: HTMLImageElement) => void;
+
+export function load_image(name, callback: OnLoadImageCallback) {
   tmp = new Image();
   tmp.src = 'm/' + name + '.png';
   tmp.onload = callback;
 }
 
-export function next_level(callback) {
+export function next_level(callback?: () => void) {
   if (currentLevel === 3) {
     entitiesToKill.push(currentPlayer);
     terminal_run_outro();
@@ -81,7 +83,7 @@ export function next_level(callback) {
   }
 }
 
-function load_level(id, callback) {
+function load_level(id, callback?: () => void) {
   random_seed(0xbadc0de1 + id);
   load_image('l' + id, function() {
     entities = [];
