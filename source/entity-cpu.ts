@@ -12,7 +12,7 @@ import {
   currentLevel,
 } from './game';
 import { pushBlock, pushLight } from './renderer';
-import { terminal_show_notice } from './terminal';
+import { showNotice } from './terminal';
 
 export default class Cpu extends Entity {
   private animationTime = 0;
@@ -36,14 +36,14 @@ export default class Cpu extends Entity {
       const rebootMessage = '\n\n\nREBOOTING..._' + 'SUCCESS\n';
 
       if (cpusTotal - get_cpus_rebooted() > 0) {
-        terminal_show_notice(
+        showNotice(
           rebootMessage +
             (cpusTotal - get_cpus_rebooted()) +
             ' SYSTEM(S) STILL OFFLINE',
         );
       } else {
         if (currentLevel !== 3) {
-          terminal_show_notice(
+          showNotice(
             rebootMessage +
               'ALL SYSTEMS ONLINE\n' +
               'TRIANGULATING POSITION FOR NEXT HOP...___' +
@@ -52,10 +52,7 @@ export default class Cpu extends Entity {
             next_level,
           );
         } else {
-          terminal_show_notice(
-            rebootMessage + 'ALL SYSTEMS ONLINE',
-            next_level,
-          );
+          showNotice(rebootMessage + 'ALL SYSTEMS ONLINE', next_level);
         }
       }
 

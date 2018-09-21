@@ -120,7 +120,7 @@ export function terminal_write_line(line, callback?: () => void) {
   timeoutId = setTimeout(callback, lineWait);
 }
 
-export function terminal_show_notice(notice, callback?: () => void) {
+export function showNotice(notice, callback?: () => void) {
   a.innerHTML = '';
   textBuffer = [];
 

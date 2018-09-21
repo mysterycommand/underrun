@@ -19,7 +19,7 @@ import {
   renderer_prepare_frame,
   renderer_end_frame,
 } from './renderer';
-import { terminal_show_notice, terminal_run_outro } from './terminal';
+import { showNotice, terminal_run_outro } from './terminal';
 
 import Entity from './entity';
 import Cpu from './entity-cpu';
@@ -177,7 +177,7 @@ function load_level(id, callback?: () => void) {
 
     set_level_num_verts(get_num_verts());
 
-    terminal_show_notice(
+    showNotice(
       'SCANNING FOR OFFLINE SYSTEMS...___' + cpusTotal + ' SYSTEMS FOUND',
     );
     // tslint:disable-next-line no-unused-expression

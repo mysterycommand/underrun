@@ -16,7 +16,7 @@ import {
   mouseY,
   reload_level,
 } from './game';
-import { terminal_show_notice } from './terminal';
+import { showNotice } from './terminal';
 
 export default class Player extends Entity {
   private bob = 0;
@@ -81,7 +81,7 @@ export default class Player extends Entity {
     super.kill();
     this.y = 10;
     this.z += 5;
-    terminal_show_notice('DEPLOYMENT FAILED\n' + 'RESTORING BACKUP...');
+    showNotice('DEPLOYMENT FAILED\n' + 'RESTORING BACKUP...');
     setTimeout(reload_level, 3000);
   }
 }
