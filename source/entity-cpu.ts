@@ -3,26 +3,25 @@ import Player from './entity-player';
 
 import { play, beep } from './audio';
 import {
-  _math,
-  time_elapsed,
+  math,
+  timeElapsed,
   get_cpus_rebooted,
   set_cpus_rebooted,
-  cpus_total,
+  cpusTotal,
   next_level,
-  current_level,
+  currentLevel,
 } from './game';
 import { push_block, push_light } from './renderer';
 import { terminal_show_notice } from './terminal';
 
 export default class Cpu extends Entity {
   render() {
-    this._animation_time += time_elapsed;
+    this._animation_time += timeElapsed;
 
     push_block(this.x, this.z, 4, 17);
-    var intensity =
+    const intensity =
       this.h == 5
-        ? 0.02 +
-          _math.sin(this._animation_time * 10 + _math.random() * 2) * 0.01
+        ? 0.02 + math.sin(this._animation_time * 10 + math.random() * 2) * 0.01
         : 0.01;
     push_light(this.x + 4, 4, this.z + 12, 0.2, 0.4, 1.0, intensity);
   }
@@ -34,14 +33,14 @@ export default class Cpu extends Entity {
 
       var reboot_message = '\n\n\nREBOOTING..._' + 'SUCCESS\n';
 
-      if (cpus_total - get_cpus_rebooted() > 0) {
+      if (cpusTotal - get_cpus_rebooted() > 0) {
         terminal_show_notice(
           reboot_message +
-            (cpus_total - get_cpus_rebooted()) +
+            (cpusTotal - get_cpus_rebooted()) +
             ' SYSTEM(S) STILL OFFLINE',
         );
       } else {
-        if (current_level != 3) {
+        if (currentLevel != 3) {
           terminal_show_notice(
             reboot_message +
               'ALL SYSTEMS ONLINE\n' +

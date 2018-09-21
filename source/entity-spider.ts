@@ -4,7 +4,7 @@ import Particle from './entity-particle';
 import Explosion from './entity-explosion';
 
 import { play, explode } from './audio';
-import { _math, entity_player, time_elapsed } from './game';
+import { math, currentPlayer, timeElapsed } from './game';
 import { set_camera_shake } from './renderer';
 
 export default class Spider extends Entity {
@@ -17,25 +17,25 @@ export default class Spider extends Entity {
     const t = this;
     const txd = t.x - t.targetX;
     const tzd = t.z - t.targetZ;
-    const xd = t.x - entity_player.x;
-    const zd = t.z - entity_player.z;
-    const dist = _math.sqrt(xd * xd + zd * zd);
+    const xd = t.x - currentPlayer.x;
+    const zd = t.z - currentPlayer.z;
+    const dist = math.sqrt(xd * xd + zd * zd);
 
-    t.selectTargetCounter -= time_elapsed;
+    t.selectTargetCounter -= timeElapsed;
 
     // select new target after a while
     if (t.selectTargetCounter < 0 && dist < 64) {
-      t.selectTargetCounter = _math.random() * 0.5 + 0.3;
-      t.targetX = entity_player.x;
-      t.targetZ = entity_player.z;
+      t.selectTargetCounter = math.random() * 0.5 + 0.3;
+      t.targetX = currentPlayer.x;
+      t.targetZ = currentPlayer.z;
     }
 
     // set velocity towards target
-    t.ax = _math.abs(txd) > 2 ? (txd > 0 ? -160 : 160) : 0;
-    t.az = _math.abs(tzd) > 2 ? (tzd > 0 ? -160 : 160) : 0;
+    t.ax = math.abs(txd) > 2 ? (txd > 0 ? -160 : 160) : 0;
+    t.az = math.abs(tzd) > 2 ? (tzd > 0 ? -160 : 160) : 0;
 
     super.update();
-    this.animationTime += time_elapsed;
+    this.animationTime += timeElapsed;
 
     // tslint:disable-next-line no-bitwise
     this.s = 27 + (((this.animationTime * 15) | 0) % 3);
@@ -45,7 +45,7 @@ export default class Spider extends Entity {
     // slightly bounce off from other spiders to separate them
     if (other instanceof Spider) {
       const axis =
-        _math.abs(other.x - this.x) > _math.abs(other.z - this.z) ? 'x' : 'z';
+        math.abs(other.x - this.x) > math.abs(other.z - this.z) ? 'x' : 'z';
       const amount = this[axis] > other[axis] ? 0.6 : -0.6;
 
       this['v' + axis] += amount;
@@ -79,9 +79,9 @@ export default class Spider extends Entity {
     for (let i = 0; i < amount; i++) {
       // tslint:disable-next-line no-unused-expression
       const particle = new Particle(this.x, 0, this.z, 1, 30);
-      particle.vx = (_math.random() - 0.5) * 128;
-      particle.vy = _math.random() * 96;
-      particle.vz = (_math.random() - 0.5) * 128;
+      particle.vx = (math.random() - 0.5) * 128;
+      particle.vy = math.random() * 96;
+      particle.vz = (math.random() - 0.5) * 128;
     }
   }
 }

@@ -3,7 +3,7 @@ import Spider from './entity-spider';
 import Sentry from './entity-sentry';
 
 import { play, hit } from './audio';
-import { _math } from './game';
+import { math } from './game';
 import { push_light } from './renderer';
 
 export default class Plasma extends Entity {
@@ -22,8 +22,8 @@ export default class Plasma extends Entity {
 
   protected init(angle) {
     const speed = 96;
-    this.vx = _math.cos(angle) * speed;
-    this.vz = _math.sin(angle) * speed;
+    this.vx = math.cos(angle) * speed;
+    this.vz = math.sin(angle) * speed;
   }
 
   protected didCollide() {

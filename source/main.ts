@@ -1,5 +1,5 @@
 import { init } from './audio';
-import { _document, load_image, next_level, game_tick } from './game';
+import { docu, load_image, next_level, game_tick } from './game';
 import {
   terminal_write_line,
   terminal_cancel,
@@ -11,8 +11,8 @@ import { renderer_init, renderer_bind_image } from './renderer';
 terminal_write_line('INITIATING...');
 
 init(function() {
-  _document.onclick = function() {
-    _document.onclick = null;
+  docu.onclick = function() {
+    docu.onclick = null;
     terminal_cancel();
     terminal_write_line('INITIATING...', function() {
       renderer_init();

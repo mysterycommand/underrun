@@ -28,55 +28,56 @@ import Sentry from './entity-sentry';
 import Spider from './entity-spider';
 
 export const udef = undefined; // global undefined
-export const _math = Math;
-export const _document = document;
-let _temp: any;
+export const math = Math;
+export const docu = document;
+
+let tmp: any;
 
 export const keys = { 37: 0, 38: 0, 39: 0, 40: 0 };
-export const key_up = 38;
-export const key_down = 40;
-export const key_left = 37;
-export const key_right = 39;
-export const key_shoot = 512;
-export const key_convert = { 65: 37, 87: 38, 68: 39, 83: 40 }; // convert AWDS to left up down right
-export let mouse_x = 0;
-export let mouse_y = 0;
+export const keyUp = 38;
+export const keyDown = 40;
+export const keyLeft = 37;
+export const keyRight = 39;
+export const keyShoot = 512;
+export const keyConvert = { 65: 37, 87: 38, 68: 39, 83: 40 }; // convert AWDS to left up down right
+export let mouseX = 0;
+export let mouseY = 0;
 
-export let time_elapsed;
-let time_last = performance.now();
+export let timeElapsed;
+let timeLast = performance.now();
 
-export const level_width = 64;
-const level_height = 64;
-export const level_data = new Uint8Array(level_width * level_height);
+export const levelWidth = 64;
+const levelHeight = 64;
+export const levelData = new Uint8Array(levelWidth * levelHeight);
 
-export let cpus_total = 0;
+export let cpusTotal = 0;
 
-let cpus_rebooted = 0;
+let cpusRebooted = 0;
 export function get_cpus_rebooted() {
-  return cpus_rebooted;
+  return cpusRebooted;
 }
 export function set_cpus_rebooted(rebooted) {
-  cpus_rebooted = rebooted;
+  cpusRebooted = rebooted;
 }
 
-export let current_level = 0;
-export let entity_player;
+export let currentLevel = 0;
+export let currentPlayer;
 export let entities: Entity[] = [];
 export let entitiesToKill: Entity[] = [];
 
 export function load_image(name, callback) {
-  _temp = new Image();
-  _temp.src = 'm/' + name + '.png';
-  _temp.onload = callback;
+  tmp = new Image();
+  tmp.src = 'm/' + name + '.png';
+  tmp.onload = callback;
 }
 
 export function next_level(callback) {
-  if (current_level === 3) {
-    entitiesToKill.push(entity_player);
+  if (currentLevel === 3) {
+    entitiesToKill.push(currentPlayer);
     terminal_run_outro();
   } else {
-    current_level++;
-    load_level(current_level, callback);
+    currentLevel++;
+    load_level(currentLevel, callback);
   }
 }
 
@@ -87,25 +88,25 @@ function load_level(id, callback) {
     set_num_verts(0);
     set_num_lights(0);
 
-    cpus_total = 0;
-    cpus_rebooted = 0;
+    cpusTotal = 0;
+    cpusRebooted = 0;
 
-    _temp = _document.createElement('canvas');
-    _temp.width = _temp.height = level_width; // assume square levels
-    _temp = _temp.getContext('2d');
-    _temp.drawImage(this, 0, 0);
-    _temp = _temp.getImageData(0, 0, level_width, level_height).data;
+    tmp = docu.createElement('canvas');
+    tmp.width = tmp.height = levelWidth; // assume square levels
+    tmp = tmp.getContext('2d');
+    tmp.drawImage(this, 0, 0);
+    tmp = tmp.getImageData(0, 0, levelWidth, levelHeight).data;
 
-    for (let y = 0, index = 0; y < level_height; y++) {
-      for (let x = 0; x < level_width; x++, index++) {
+    for (let y = 0, index = 0; y < levelHeight; y++) {
+      for (let x = 0; x < levelWidth; x++, index++) {
         // reduce to 12 bit color to accurately match
         const color_key =
-          ((_temp[index * 4] >> 4) << 8) +
-          ((_temp[index * 4 + 1] >> 4) << 4) +
-          (_temp[index * 4 + 2] >> 4);
+          ((tmp[index * 4] >> 4) << 8) +
+          ((tmp[index * 4 + 1] >> 4) << 4) +
+          (tmp[index * 4 + 2] >> 4);
 
         if (color_key !== 0) {
-          const tile = (level_data[index] =
+          const tile = (levelData[index] =
             color_key === 0x888 // wall
               ? random_int(0, 5) < 4
                 ? 8
@@ -132,9 +133,9 @@ function load_level(id, callback) {
 
           // cpu
           if (color_key === 0x00f) {
-            level_data[index] = 8;
+            levelData[index] = 8;
             new Cpu(x * 8, 0, y * 8, 0, 18);
-            cpus_total++;
+            cpusTotal++;
           }
 
           // sentry
@@ -144,7 +145,7 @@ function load_level(id, callback) {
 
           // player start position (blue)
           if (color_key === 0x0f0) {
-            entity_player = new Player(x * 8, 0, y * 8, 5, 18);
+            currentPlayer = new Player(x * 8, 0, y * 8, 5, 18);
           }
         }
       }
@@ -154,71 +155,71 @@ function load_level(id, callback) {
     for (const e of entities) {
       if (
         e instanceof Spider &&
-        _math.abs(e.x - entity_player.x) < 64 &&
-        _math.abs(e.z - entity_player.z) < 64
+        math.abs(e.x - currentPlayer.x) < 64 &&
+        math.abs(e.z - currentPlayer.z) < 64
       ) {
         entitiesToKill.push(e);
       }
     }
 
-    set_camera_x(-entity_player.x);
+    set_camera_x(-currentPlayer.x);
     set_camera_y(-300);
-    set_camera_z(-entity_player.z - 100);
+    set_camera_z(-currentPlayer.z - 100);
 
     set_level_num_verts(get_num_verts());
 
     terminal_show_notice(
-      'SCANNING FOR OFFLINE SYSTEMS...___' + cpus_total + ' SYSTEMS FOUND',
+      'SCANNING FOR OFFLINE SYSTEMS...___' + cpusTotal + ' SYSTEMS FOUND',
     );
     callback && callback();
   });
 }
 
 export function reload_level() {
-  load_level(current_level);
+  load_level(currentLevel);
 }
 
 function preventDefault(ev) {
   ev.preventDefault();
 }
 
-_document.onkeydown = ev => {
-  _temp = ev.keyCode;
-  _temp = key_convert[_temp] || _temp;
-  if (keys[_temp] !== udef) {
-    keys[_temp] = 1;
+docu.onkeydown = ev => {
+  tmp = ev.keyCode;
+  tmp = keyConvert[tmp] || tmp;
+  if (keys[tmp] !== udef) {
+    keys[tmp] = 1;
     preventDefault(ev);
   }
 };
 
-_document.onkeyup = ev => {
-  _temp = ev.keyCode;
-  _temp = key_convert[_temp] || _temp;
-  if (keys[_temp] !== udef) {
-    keys[_temp] = 0;
+docu.onkeyup = ev => {
+  tmp = ev.keyCode;
+  tmp = keyConvert[tmp] || tmp;
+  if (keys[tmp] !== udef) {
+    keys[tmp] = 0;
     preventDefault(ev);
   }
 };
 
-_document.onmousemove = ev => {
-  mouse_x = (ev.clientX / c.clientWidth) * c.width;
-  mouse_y = (ev.clientY / c.clientHeight) * c.height;
+docu.onmousemove = ev => {
+  mouseX = (ev.clientX / c.clientWidth) * c.width;
+  mouseY = (ev.clientY / c.clientHeight) * c.height;
 };
 
-_document.onmousedown = ev => {
-  keys[key_shoot] = 1;
+docu.onmousedown = ev => {
+  keys[keyShoot] = 1;
   preventDefault(ev);
 };
 
-_document.onmouseup = ev => {
-  keys[key_shoot] = 0;
+docu.onmouseup = ev => {
+  keys[keyShoot] = 0;
   preventDefault(ev);
 };
 
 export function game_tick() {
   const time_now = performance.now();
-  time_elapsed = (time_now - time_last) / 1000;
-  time_last = time_now;
+  timeElapsed = (time_now - timeLast) / 1000;
+  timeLast = time_now;
 
   renderer_prepare_frame();
 
@@ -250,17 +251,17 @@ export function game_tick() {
   }
 
   // center camera on player, apply damping
-  set_camera_x(get_camera_x() * 0.92 - entity_player.x * 0.08);
-  set_camera_y(get_camera_y() * 0.92 - entity_player.y * 0.08);
-  set_camera_z(get_camera_z() * 0.92 - entity_player.z * 0.08);
+  set_camera_x(get_camera_x() * 0.92 - currentPlayer.x * 0.08);
+  set_camera_y(get_camera_y() * 0.92 - currentPlayer.y * 0.08);
+  set_camera_z(get_camera_z() * 0.92 - currentPlayer.z * 0.08);
 
   // add camera shake
   set_camera_shake(get_camera_shake() * 0.9);
-  set_camera_x(get_camera_x() + get_camera_shake() * (_math.random() - 0.5));
-  set_camera_z(get_camera_z() + get_camera_shake() * (_math.random() - 0.5));
+  set_camera_x(get_camera_x() + get_camera_shake() * (math.random() - 0.5));
+  set_camera_z(get_camera_z() + get_camera_shake() * (math.random() - 0.5));
 
   // health bar, render with plasma sprite
-  for (let i = 0; i < entity_player.h; i++) {
+  for (let i = 0; i < currentPlayer.h; i++) {
     push_sprite(
       -get_camera_x() - 50 + i * 4,
       29 - get_camera_y(),

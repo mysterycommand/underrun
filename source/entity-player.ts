@@ -4,16 +4,16 @@ import Plasma from './entity-plasma';
 import { get_camera_x, push_light } from './renderer';
 
 import {
-  _math,
-  time_elapsed,
+  math,
+  timeElapsed,
   keys,
-  key_up,
-  key_down,
-  key_left,
-  key_right,
-  key_shoot,
-  mouse_x,
-  mouse_y,
+  keyUp,
+  keyDown,
+  keyLeft,
+  keyRight,
+  keyShoot,
+  mouseX,
+  mouseY,
   reload_level,
 } from './game';
 import { terminal_show_notice } from './terminal';
@@ -24,29 +24,29 @@ export default class Player extends Entity {
     const speed = 128;
 
     // movement
-    t.ax = keys[key_left] ? -speed : keys[key_right] ? speed : 0;
-    t.az = keys[key_up] ? -speed : keys[key_down] ? speed : 0;
+    t.ax = keys[keyLeft] ? -speed : keys[keyRight] ? speed : 0;
+    t.az = keys[keyUp] ? -speed : keys[keyDown] ? speed : 0;
 
     // rotation - select appropriate sprite
-    const angle = _math.atan2(
-      mouse_y - (-34 + c.height * 0.8),
-      mouse_x - (t.x + 6 + get_camera_x() + c.width * 0.5),
+    const angle = math.atan2(
+      mouseY - (-34 + c.height * 0.8),
+      mouseX - (t.x + 6 + get_camera_x() + c.width * 0.5),
     );
-    t.s = (18 + (((angle / _math.PI) * 4 + 10.5) % 8)) | 0;
+    t.s = (18 + (((angle / math.PI) * 4 + 10.5) % 8)) | 0;
 
     // bobbing
-    t._bob += time_elapsed * 1.75 * (_math.abs(t.vx) + _math.abs(t.vz));
-    t.y = _math.sin(t._bob) * 0.25;
+    t._bob += timeElapsed * 1.75 * (math.abs(t.vx) + math.abs(t.vz));
+    t.y = math.sin(t._bob) * 0.25;
 
-    t._last_damage -= time_elapsed;
-    t._last_shot -= time_elapsed;
+    t._last_damage -= timeElapsed;
+    t._last_shot -= timeElapsed;
 
-    if (keys[key_shoot] && t._last_shot < 0) {
+    if (keys[keyShoot] && t._last_shot < 0) {
       play(shoot);
       // prettier-ignore
       new Plasma(
         t.x, 0, t.z, 0, 26,
-        angle + _math.random() * 0.2 - 0.11,
+        angle + math.random() * 0.2 - 0.11,
       );
       t._last_shot = 0.1;
     }

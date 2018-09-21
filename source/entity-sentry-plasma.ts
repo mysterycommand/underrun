@@ -1,7 +1,7 @@
 import Entity from './entity';
 import Player from './entity-player';
 
-import { _math } from './game';
+import { math } from './game';
 import { push_light } from './renderer';
 
 export default class SentryPlasma extends Entity {
@@ -19,8 +19,8 @@ export default class SentryPlasma extends Entity {
 
   protected init(angle) {
     const speed = 64;
-    this.vx = _math.cos(angle) * speed;
-    this.vz = _math.sin(angle) * speed;
+    this.vx = math.cos(angle) * speed;
+    this.vz = math.sin(angle) * speed;
   }
 
   protected didCollide() {

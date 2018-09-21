@@ -1,10 +1,10 @@
 import {
-  _math,
+  math,
   entities,
   entitiesToKill,
-  time_elapsed,
-  level_data,
-  level_width,
+  timeElapsed,
+  levelData,
+  levelWidth,
 } from './game';
 import { push_sprite } from './renderer';
 
@@ -35,14 +35,14 @@ export default class Entity {
     const { x: lastX, z: lastZ } = t;
 
     // velocity
-    t.vx += t.ax * time_elapsed - t.vx * _math.min(t.f * time_elapsed, 1);
-    t.vy += t.ay * time_elapsed - t.vy * _math.min(t.f * time_elapsed, 1);
-    t.vz += t.az * time_elapsed - t.vz * _math.min(t.f * time_elapsed, 1);
+    t.vx += t.ax * timeElapsed - t.vx * math.min(t.f * timeElapsed, 1);
+    t.vy += t.ay * timeElapsed - t.vy * math.min(t.f * timeElapsed, 1);
+    t.vz += t.az * timeElapsed - t.vz * math.min(t.f * timeElapsed, 1);
 
     // position
-    t.x += t.vx * time_elapsed;
-    t.y += t.vy * time_elapsed;
-    t.z += t.vz * time_elapsed;
+    t.x += t.vx * timeElapsed;
+    t.y += t.vy * timeElapsed;
+    t.z += t.vz * timeElapsed;
 
     // check wall collissions, horizontal
     if (t.collides(t.x, lastZ)) {
@@ -83,10 +83,10 @@ export default class Entity {
   protected collides(x: number, z: number) {
     // tslint:disable no-bitwise
     return (
-      level_data[(x >> 3) + (z >> 3) * level_width] > 7 || // top left
-      level_data[((x + 6) >> 3) + (z >> 3) * level_width] > 7 || // top right
-      level_data[((x + 6) >> 3) + ((z + 4) >> 3) * level_width] > 7 || // bottom right
-      level_data[(x >> 3) + ((z + 4) >> 3) * level_width] > 7 // bottom left
+      levelData[(x >> 3) + (z >> 3) * levelWidth] > 7 || // top left
+      levelData[((x + 6) >> 3) + (z >> 3) * levelWidth] > 7 || // top right
+      levelData[((x + 6) >> 3) + ((z + 4) >> 3) * levelWidth] > 7 || // bottom right
+      levelData[(x >> 3) + ((z + 4) >> 3) * levelWidth] > 7 // bottom left
     );
   }
 

@@ -1,6 +1,6 @@
 import Entity from './entity';
 
-import { time_elapsed } from './game';
+import { timeElapsed } from './game';
 
 export default class Particle extends Entity {
   update() {
@@ -12,7 +12,7 @@ export default class Particle extends Entity {
 
     super.update();
 
-    this._lifetime -= time_elapsed;
+    this._lifetime -= timeElapsed;
     if (this._lifetime < 0) {
       this.kill();
     }

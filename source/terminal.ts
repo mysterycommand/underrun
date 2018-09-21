@@ -1,5 +1,5 @@
 import { play, terminal } from './audio';
-import { _math } from './game';
+import { math } from './game';
 
 const terminal_text_ident = '&gt; ';
 const terminal_text_title =
@@ -154,8 +154,8 @@ function terminal_run_garbage(callback) {
   const length = terminal_text_garbage.length;
 
   for (let i = 0; i < 64; i++) {
-    const s = (_math.random() * length) | 0;
-    const e = (_math.random() * (length - s)) | 0;
+    const s = (math.random() * length) | 0;
+    const e = (math.random() * (length - s)) | 0;
     t += terminal_text_garbage.substr(s, e) + '\n';
   }
 

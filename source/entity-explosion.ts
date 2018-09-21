@@ -1,6 +1,6 @@
 import Entity from './entity';
 
-import { time_elapsed } from './game';
+import { timeElapsed } from './game';
 import { push_light } from './renderer';
 
 export default class Explosion extends Entity {
@@ -12,7 +12,7 @@ export default class Explosion extends Entity {
       this.vy = -this.vy * 0.96;
     }
     super.update();
-    this._lifetime -= time_elapsed;
+    this._lifetime -= timeElapsed;
     if (this._lifetime < 0) {
       this.kill();
     }
