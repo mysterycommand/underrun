@@ -212,7 +212,7 @@ export function push_floor(x, z, tile) {
   );
 }
 
-export function push_block(x, z, tileTop, tileSites) {
+export function pushBlock(x, z, tileTop, tileSites) {
   // tall blocks for certain tiles
   // tslint:disable-next-line no-bitwise
   const y = ~[8, 9, 17].indexOf(tileSites) ? 16 : 8;

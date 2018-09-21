@@ -5,7 +5,7 @@ import {
   set_num_verts,
   set_level_num_verts,
   set_num_lights,
-  push_block,
+  pushBlock,
   push_floor,
   push_sprite,
   get_camera_x,
@@ -123,7 +123,7 @@ function load_level(id, callback?: () => void) {
 
           if (tile > 7) {
             // walls
-            push_block(x * 8, y * 8, 4, tile - 1);
+            pushBlock(x * 8, y * 8, 4, tile - 1);
           } else if (tile > 0) {
             // floor
             push_floor(x * 8, y * 8, tile - 1);

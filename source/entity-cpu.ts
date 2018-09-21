@@ -11,7 +11,7 @@ import {
   next_level,
   currentLevel,
 } from './game';
-import { push_block, push_light } from './renderer';
+import { pushBlock, push_light } from './renderer';
 import { terminal_show_notice } from './terminal';
 
 export default class Cpu extends Entity {
@@ -20,7 +20,7 @@ export default class Cpu extends Entity {
   public render() {
     this.animationTime += timeElapsed;
 
-    push_block(this.x, this.z, 4, 17);
+    pushBlock(this.x, this.z, 4, 17);
     const intensity =
       this.h === 5
         ? 0.02 + math.sin(this.animationTime * 10 + math.random() * 2) * 0.01
