@@ -1,4 +1,4 @@
-export var music_dark_meat_beat = {
+export const darkMeatBeat = {
   rowLen: 5513,
   endPattern: 25,
   songData: [

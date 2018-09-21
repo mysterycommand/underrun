@@ -4,114 +4,117 @@ import vertex_shader from './s/vert.glsl';
 import fragment_shader from './s/frag.glsl';
 
 const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-let vertex_buffer;
-let shader_program;
+let vertexBuffer;
+let shaderProgram;
 
-const texture_size = 1024;
-const tile_size = 16;
-const tile_fraction = tile_size / texture_size;
-const px_nudge = 0.5 / texture_size;
+const textureSize = 1024;
+const tileSize = 16;
+const tileFraction = tileSize / textureSize;
+const pxNudge = 0.5 / textureSize;
 
-const max_verts = 1024 * 64;
+const maxVerts = 1024 * 64;
 
-let num_verts = 0;
+let numVerts = 0;
 export function get_num_verts() {
-  return num_verts;
+  return numVerts;
 }
 export function set_num_verts(verts) {
-  num_verts = verts;
+  numVerts = verts;
 }
 
-let level_num_verts;
+let levelNumVerts;
 export function get_level_num_verts() {
-  return level_num_verts;
+  return levelNumVerts;
 }
 export function set_level_num_verts(verts) {
-  level_num_verts = verts;
+  levelNumVerts = verts;
 }
 
 // allow 64k verts, 8 properties per vert
-const buffer_data = new Float32Array(max_verts * 8);
+const bufferData = new Float32Array(maxVerts * 8);
 
-let light_uniform;
-const max_lights = 32;
+let lightUniform;
+const maxLights = 32;
 
-let num_lights = 0;
+let numLights = 0;
 export function get_num_lights() {
-  return num_lights;
+  return numLights;
 }
 export function set_num_lights(lights) {
-  num_lights = lights;
+  numLights = lights;
 }
 
 // 32 lights, 7 properties per light
-const light_data = new Float32Array(max_lights * 7);
+const lightData = new Float32Array(maxLights * 7);
 
-let camera_x = 0;
+let cameraX = 0;
 export function get_camera_x() {
-  return camera_x;
+  return cameraX;
 }
 export function set_camera_x(x) {
-  camera_x = x;
+  cameraX = x;
 }
 
-let camera_y = 0;
+let cameraY = 0;
 export function get_camera_y() {
-  return camera_y;
+  return cameraY;
 }
 export function set_camera_y(y) {
-  camera_y = y;
+  cameraY = y;
 }
 
-let camera_z = 0;
+let cameraZ = 0;
 export function get_camera_z() {
-  return camera_z;
+  return cameraZ;
 }
 export function set_camera_z(z) {
-  camera_z = z;
+  cameraZ = z;
 }
 
-let camera_shake = 0;
+let cameraShake = 0;
 export function get_camera_shake() {
-  return camera_shake;
+  return cameraShake;
 }
 export function set_camera_shake(shake) {
-  camera_shake = shake;
+  cameraShake = shake;
 }
 
-let camera_uniform;
+let cameraUniform;
 
 export function renderer_init() {
   // Create shorthand WebGL function names
   // var webglShortFunctionNames = {};
   for (const name in gl) {
-    if (gl[name].length != udef) {
-      gl[name.match(/(^..|[A-Z]|\d.|v$)/g).join('')] = gl[name];
+    if (gl[name].length !== udef) {
+      const match = name.match(/(^..|[A-Z]|\d.|v$)/g);
+      if (match !== null) {
+        gl[match.join('')] = gl[name];
+      }
       // webglShortFunctionNames[name] = 'gl.'+name.match(/(^..|[A-Z]|\d.|v$)/g).join('');
     }
   }
   // console.log(JSON.stringify(webglShortFunctionNames, null, '\t'));
 
-  vertex_buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, buffer_data, gl.DYNAMIC_DRAW);
+  vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, bufferData, gl.DYNAMIC_DRAW);
 
-  shader_program = gl.createProgram();
+  shaderProgram = gl.createProgram();
   gl.attachShader(
-    shader_program,
+    shaderProgram,
     compile_shader(gl.VERTEX_SHADER, vertex_shader),
   );
   gl.attachShader(
-    shader_program,
+    shaderProgram,
     compile_shader(gl.FRAGMENT_SHADER, fragment_shader),
   );
-  gl.linkProgram(shader_program);
+  gl.linkProgram(shaderProgram);
   // console.log({ programInfoLog: gl.getProgramInfoLog(shader_program) });
 
-  gl.useProgram(shader_program);
+  gl.useProgram(shaderProgram);
 
-  camera_uniform = gl.getUniformLocation(shader_program, 'cam');
-  light_uniform = gl.getUniformLocation(shader_program, 'l');
+  cameraUniform = gl.getUniformLocation(shaderProgram, 'cam');
+  lightUniform = gl.getUniformLocation(shaderProgram, 'l');
 
   gl.enable(gl.DEPTH_TEST);
   gl.enable(gl.BLEND);
@@ -124,34 +127,35 @@ export function renderer_init() {
 }
 
 export function renderer_bind_image(image) {
-  const texture_2d = gl.TEXTURE_2D;
+  const texture2d = gl.TEXTURE_2D;
 
-  gl.bindTexture(texture_2d, gl.createTexture());
-  gl.texImage2D(texture_2d, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+  gl.bindTexture(texture2d, gl.createTexture());
+  gl.texImage2D(texture2d, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 
-  gl.texParameteri(texture_2d, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texParameteri(texture_2d, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(texture_2d, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(texture_2d, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(texture2d, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(texture2d, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(texture2d, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(texture2d, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 }
 
 export function renderer_prepare_frame() {
-  num_verts = level_num_verts;
-  num_lights = 0;
+  numVerts = levelNumVerts;
+  numLights = 0;
 
   // reset all lights
-  light_data.fill(1);
+  lightData.fill(1);
 }
 
 export function renderer_end_frame() {
-  gl.uniform3f(camera_uniform, camera_x, camera_y - 10, camera_z - 30);
-  gl.uniform1fv(light_uniform, light_data);
+  gl.uniform3f(cameraUniform, cameraX, cameraY - 10, cameraZ - 30);
+  gl.uniform1fv(lightUniform, lightData);
 
   gl.clearColor(0, 0, 0, 1);
+  // tslint:disable-next-line no-bitwise
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  gl.bufferData(gl.ARRAY_BUFFER, buffer_data, gl.DYNAMIC_DRAW);
-  gl.drawArrays(gl.TRIANGLES, 0, num_verts);
+  gl.bufferData(gl.ARRAY_BUFFER, bufferData, gl.DYNAMIC_DRAW);
+  gl.drawArrays(gl.TRIANGLES, 0, numVerts);
 }
 
 // prettier-ignore
@@ -163,25 +167,25 @@ function push_quad(
   nx, ny, nz,
   tile,
 ) {
-  const u = tile * tile_fraction + px_nudge;
-  buffer_data.set(
+  const u = tile * tileFraction + pxNudge;
+  bufferData.set(
     // prettier-ignore
     [
       x1, y1, z1, u, 0, nx, ny, nz,
-      x2, y2, z2, u + tile_fraction - px_nudge, 0, nx, ny, nz,
+      x2, y2, z2, u + tileFraction - pxNudge, 0, nx, ny, nz,
       x3, y3, z3, u, 1, nx, ny, nz,
-      x2, y2, z2, u + tile_fraction - px_nudge, 0, nx, ny, nz,
+      x2, y2, z2, u + tileFraction - pxNudge, 0, nx, ny, nz,
       x3, y3, z3, u, 1, nx, ny, nz,
-      x4, y4, z4, u + tile_fraction - px_nudge, 1, nx, ny, nz
+      x4, y4, z4, u + tileFraction - pxNudge, 1, nx, ny, nz
     ],
-    num_verts * 8,
+    numVerts * 8,
   );
-  num_verts += 6;
+  numVerts += 6;
 }
 
 export function push_sprite(x, y, z, tile) {
   // tilt sprite when closer to camera
-  const tilt = 3 + (camera_z + z) / 12;
+  const tilt = 3 + (cameraZ + z) / 12;
 
   // prettier-ignore
   push_quad(
@@ -205,9 +209,10 @@ export function push_floor(x, z, tile) {
   );
 }
 
-export function push_block(x, z, tile_top, tile_sites) {
+export function push_block(x, z, tileTop, tileSites) {
   // tall blocks for certain tiles
-  const y = ~[8, 9, 17].indexOf(tile_sites) ? 16 : 8;
+  // tslint:disable-next-line no-bitwise
+  const y = ~[8, 9, 17].indexOf(tileSites) ? 16 : 8;
 
   // prettier-ignore
   push_quad(
@@ -216,7 +221,7 @@ export function push_block(x, z, tile_top, tile_sites) {
     x, y, z + 8,
     x + 8, y, z + 8,
     0, 1, 0,
-    tile_top,
+    tileTop,
   ); // top
 
   // prettier-ignore
@@ -226,7 +231,7 @@ export function push_block(x, z, tile_top, tile_sites) {
     x + 8, 0, z,
     x + 8, 0, z + 8,
     1, 0, 0,
-    tile_sites,
+    tileSites,
   ); // right
 
   // prettier-ignore
@@ -236,7 +241,7 @@ export function push_block(x, z, tile_top, tile_sites) {
     x, 0, z + 8,
     x + 8, 0, z + 8,
     0, 0, 1,
-    tile_sites,
+    tileSites,
   ); // front
 
   // prettier-ignore
@@ -246,40 +251,40 @@ export function push_block(x, z, tile_top, tile_sites) {
     x, 0, z,
     x, 0, z + 8,
     -1, 0, 0,
-    tile_sites,
+    tileSites,
   ); // left
 }
 
 export function push_light(x, y, z, r, g, b, falloff) {
-  if (num_lights < max_lights) {
+  if (numLights < maxLights) {
     // prettier-ignore
-    light_data.set([
+    lightData.set([
       x, y, z,
       r, g, b,
       falloff,
-    ], num_lights * 7);
+    ], numLights * 7);
 
-    num_lights++;
+    numLights++;
   }
 }
 
-function compile_shader(shader_type, shader_source) {
-  const shader = gl.createShader(shader_type);
-  gl.shaderSource(shader, shader_source);
+function compile_shader(type, source) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
   gl.compileShader(shader);
   // console.log({ shaderInfoLog: gl.getShaderInfoLog(shader) });
   return shader;
 }
 
-function enable_vertex_attrib(attrib_name, count, vertex_size, offset) {
-  const location = gl.getAttribLocation(shader_program, attrib_name);
+function enable_vertex_attrib(name, count, size, offset) {
+  const location = gl.getAttribLocation(shaderProgram, name);
   gl.enableVertexAttribArray(location);
   gl.vertexAttribPointer(
     location,
     count,
     gl.FLOAT,
     false,
-    vertex_size * 4,
+    size * 4,
     offset * 4,
   );
 }

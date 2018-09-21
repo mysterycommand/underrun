@@ -1,6 +1,6 @@
 import { generateSong, generateSound } from './sonantx-reduced';
 
-import { music_dark_meat_beat } from './music-dark-meat-beat';
+import { darkMeatBeat } from './music-dark-meat-beat';
 import {
   terminalSound,
   shootSound,
@@ -22,7 +22,7 @@ export let terminal;
 export let explode;
 
 export function init(callback) {
-  generateSong(audioContext, music_dark_meat_beat, buffer => {
+  generateSong(audioContext, darkMeatBeat, buffer => {
     play(buffer, true);
     callback();
   });
