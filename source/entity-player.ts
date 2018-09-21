@@ -20,15 +20,15 @@ import { terminal_show_notice } from './terminal';
 
 export default class Player extends Entity {
   public update() {
-    var t = this;
-    var speed = 128;
+    const t = this;
+    const speed = 128;
 
     // movement
     t.ax = keys[key_left] ? -speed : keys[key_right] ? speed : 0;
     t.az = keys[key_up] ? -speed : keys[key_down] ? speed : 0;
 
     // rotation - select appropriate sprite
-    var angle = _math.atan2(
+    const angle = _math.atan2(
       mouse_y - (-34 + c.height * 0.8),
       mouse_x - (t.x + 6 + get_camera_x() + c.width * 0.5),
     );

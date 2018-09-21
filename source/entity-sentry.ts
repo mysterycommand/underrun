@@ -9,7 +9,7 @@ import { set_camera_shake } from './renderer';
 
 export default class Sentry extends Entity {
   public update() {
-    var t = this;
+    const t = this;
 
     const txd = t.x - t._target_x;
     const tzd = t.z - t._target_z;
@@ -27,7 +27,7 @@ export default class Sentry extends Entity {
         t._target_z = entity_player.z;
       }
       if (dist < 48) {
-        var angle = _math.atan2(
+        const angle = _math.atan2(
           entity_player.z - this.z,
           entity_player.x - this.x,
         );
@@ -73,8 +73,8 @@ export default class Sentry extends Entity {
   }
 
   private spawnParticles(amount) {
-    for (var i = 0; i < amount; i++) {
-      var particle = new Particle(this.x, 0, this.z, 1, 30);
+    for (let i = 0; i < amount; i++) {
+      const particle = new Particle(this.x, 0, this.z, 1, 30);
       particle.vx = (_math.random() - 0.5) * 128;
       particle.vy = _math.random() * 96;
       particle.vz = (_math.random() - 0.5) * 128;
