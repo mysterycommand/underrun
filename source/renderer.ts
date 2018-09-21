@@ -258,7 +258,7 @@ export function pushBlock(x, z, tileTop, tileSites) {
   ); // left
 }
 
-export function push_light(x, y, z, r, g, b, falloff) {
+export function pushLight(x, y, z, r, g, b, falloff) {
   if (numLights < maxLights) {
     // prettier-ignore
     lightData.set([

@@ -4,12 +4,12 @@ import Sentry from './entity-sentry';
 
 import { play, hit } from './audio';
 import { math } from './game';
-import { push_light } from './renderer';
+import { pushLight } from './renderer';
 
 export default class Plasma extends Entity {
   public render() {
     super.render();
-    push_light(this.x, 4, this.z + 6, 0.9, 0.2, 0.1, 0.04);
+    pushLight(this.x, 4, this.z + 6, 0.9, 0.2, 0.1, 0.04);
   }
 
   public check(other) {

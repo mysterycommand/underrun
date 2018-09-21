@@ -1,7 +1,7 @@
 import Entity from './entity';
 
 import { timeElapsed } from './game';
-import { push_light } from './renderer';
+import { pushLight } from './renderer';
 
 export default class Explosion extends Entity {
   private lifetime = 1;
@@ -21,6 +21,6 @@ export default class Explosion extends Entity {
   }
 
   public render() {
-    push_light(this.x, 4, this.z + 6, 1, 0.7, 0.3, 0.08 * (1 - this.lifetime));
+    pushLight(this.x, 4, this.z + 6, 1, 0.7, 0.3, 0.08 * (1 - this.lifetime));
   }
 }

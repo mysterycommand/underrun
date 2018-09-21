@@ -1,7 +1,7 @@
 import { play, shoot, hurt } from './audio';
 import Entity from './entity';
 import Plasma from './entity-plasma';
-import { c, get_camera_x, push_light } from './renderer';
+import { c, get_camera_x, pushLight } from './renderer';
 
 import {
   math,
@@ -74,7 +74,7 @@ export default class Player extends Entity {
     if (this.lastDamage < 0 || this.frame % 6 < 4) {
       super.render();
     }
-    push_light(this.x, 4, this.z + 6, 1, 0.5, 0, 0.04);
+    pushLight(this.x, 4, this.z + 6, 1, 0.5, 0, 0.04);
   }
 
   protected kill() {
