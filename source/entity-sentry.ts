@@ -8,23 +8,28 @@ import { math, currentPlayer, timeElapsed } from './game';
 import { set_camera_shake } from './renderer';
 
 export default class Sentry extends Entity {
+  public h = 20;
+  private selectTargetCounter = 0;
+  private targetX = this.x;
+  private targetZ = this.z;
+
   public update() {
     const t = this;
 
-    const txd = t.x - t._target_x;
-    const tzd = t.z - t._target_z;
+    const txd = t.x - t.targetX;
+    const tzd = t.z - t.targetZ;
     const xd = t.x - currentPlayer.x;
     const zd = t.z - currentPlayer.z;
     const dist = math.sqrt(xd * xd + zd * zd);
 
-    t._select_target_counter -= timeElapsed;
+    t.selectTargetCounter -= timeElapsed;
 
     // select new target after a while
-    if (t._select_target_counter < 0) {
+    if (t.selectTargetCounter < 0) {
       if (dist < 64) {
-        t._select_target_counter = math.random() * 0.5 + 0.3;
-        t._target_x = currentPlayer.x;
-        t._target_z = currentPlayer.z;
+        t.selectTargetCounter = math.random() * 0.5 + 0.3;
+        t.targetX = currentPlayer.x;
+        t.targetZ = currentPlayer.z;
       }
       if (dist < 48) {
         const angle = math.atan2(
@@ -57,13 +62,6 @@ export default class Sentry extends Entity {
     this.vx = from.vx * 0.1;
     this.vz = from.vz * 0.1;
     this.spawnParticles(3);
-  }
-
-  protected init() {
-    this._select_target_counter = 0;
-    this._target_x = this.x;
-    this._target_z = this.z;
-    this.h = 20;
   }
 
   protected kill() {

@@ -3,6 +3,8 @@ import Entity from './entity';
 import { timeElapsed } from './game';
 
 export default class Particle extends Entity {
+  private lifetime = 3;
+
   public update() {
     this.ay = -320;
     if (this.y < 0) {
@@ -12,13 +14,9 @@ export default class Particle extends Entity {
 
     super.update();
 
-    this._lifetime -= timeElapsed;
-    if (this._lifetime < 0) {
+    this.lifetime -= timeElapsed;
+    if (this.lifetime < 0) {
       this.kill();
     }
-  }
-
-  protected init() {
-    this._lifetime = 3;
   }
 }

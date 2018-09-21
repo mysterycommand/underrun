@@ -19,6 +19,11 @@ import {
 import { terminal_show_notice } from './terminal';
 
 export default class Player extends Entity {
+  private bob = 0;
+  private lastShot = 0;
+  private lastDamage = 0;
+  private frame = 0;
+
   public update() {
     const t = this;
     const speed = 128;
@@ -36,13 +41,13 @@ export default class Player extends Entity {
     t.s = (18 + (((angle / math.PI) * 4 + 10.5) % 8)) | 0;
 
     // bobbing
-    t._bob += timeElapsed * 1.75 * (math.abs(t.vx) + math.abs(t.vz));
-    t.y = math.sin(t._bob) * 0.25;
+    t.bob += timeElapsed * 1.75 * (math.abs(t.vx) + math.abs(t.vz));
+    t.y = math.sin(t.bob) * 0.25;
 
-    t._last_damage -= timeElapsed;
-    t._last_shot -= timeElapsed;
+    t.lastDamage -= timeElapsed;
+    t.lastShot -= timeElapsed;
 
-    if (keys[keyShoot] && t._last_shot < 0) {
+    if (keys[keyShoot] && t.lastShot < 0) {
       play(shoot);
       // prettier-ignore
       // tslint:disable-next-line no-unused-expression
@@ -50,30 +55,26 @@ export default class Player extends Entity {
         t.x, 0, t.z, 0, 26,
         angle + math.random() * 0.2 - 0.11,
       );
-      t._last_shot = 0.1;
+      t.lastShot = 0.1;
     }
 
     super.update();
   }
 
   public receiveDamage(from, amount) {
-    if (this._last_damage < 0) {
+    if (this.lastDamage < 0) {
       play(hurt);
       super.receiveDamage(from, amount);
-      this._last_damage = 2;
+      this.lastDamage = 2;
     }
   }
 
   public render() {
-    this._frame++;
-    if (this._last_damage < 0 || this._frame % 6 < 4) {
+    this.frame++;
+    if (this.lastDamage < 0 || this.frame % 6 < 4) {
       super.render();
     }
     push_light(this.x, 4, this.z + 6, 1, 0.5, 0, 0.04);
-  }
-
-  protected init() {
-    this._bob = this._last_shot = this._last_damage = this._frame = 0;
   }
 
   protected kill() {

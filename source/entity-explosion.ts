@@ -4,6 +4,8 @@ import { timeElapsed } from './game';
 import { push_light } from './renderer';
 
 export default class Explosion extends Entity {
+  private lifetime = 1;
+
   public update() {
     this.ay = -320;
 
@@ -12,17 +14,13 @@ export default class Explosion extends Entity {
       this.vy = -this.vy * 0.96;
     }
     super.update();
-    this._lifetime -= timeElapsed;
-    if (this._lifetime < 0) {
+    this.lifetime -= timeElapsed;
+    if (this.lifetime < 0) {
       this.kill();
     }
   }
 
   public render() {
-    push_light(this.x, 4, this.z + 6, 1, 0.7, 0.3, 0.08 * (1 - this._lifetime));
-  }
-
-  protected init() {
-    this._lifetime = 1;
+    push_light(this.x, 4, this.z + 6, 1, 0.7, 0.3, 0.08 * (1 - this.lifetime));
   }
 }
