@@ -7,16 +7,12 @@ import { _math } from './game';
 import { push_light } from './renderer';
 
 export default class Plasma extends Entity {
-  render() {
+  public render() {
     super.render();
     push_light(this.x, 4, this.z + 6, 0.9, 0.2, 0.1, 0.04);
   }
 
-  didCollide() {
-    this.kill();
-  }
-
-  check(other) {
+  public check(other) {
     if (other instanceof Spider || other instanceof Sentry) {
       play(hit);
       other.receiveDamage(this, 1);
@@ -25,8 +21,12 @@ export default class Plasma extends Entity {
   }
 
   protected init(angle) {
-    var speed = 96;
+    const speed = 96;
     this.vx = _math.cos(angle) * speed;
     this.vz = _math.sin(angle) * speed;
+  }
+
+  protected didCollide() {
+    this.kill();
   }
 }

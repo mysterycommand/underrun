@@ -1,8 +1,8 @@
 import { play, terminal } from './audio';
 import { _math } from './game';
 
-var terminal_text_ident = '&gt; ';
-var terminal_text_title =
+const terminal_text_ident = '&gt; ';
+const terminal_text_title =
   '' +
   'UNDERRUN\n' +
   '__ \n' +
@@ -18,11 +18,11 @@ var terminal_text_title =
   ' \n' +
   'CONNECTING...';
 
-var terminal_text_garbage =
+let terminal_text_garbage =
   '´A1e{∏éI9·NQ≥ÀΩ¸94CîyîR›kÈ¡˙ßT-;ûÅf^˛,¬›A∫Sã€«ÕÕ' +
   '1f@çX8ÎRjßf•ò√ã0êÃcÄ]Î≤moDÇ’ñ‰\\ˇ≠n=(s7É;';
 
-var terminal_text_story =
+const terminal_text_story =
   'DATE: SEP. 13, 2718 - 13:32\n' +
   'CRITICAL SOFTWARE FAILURE DETECTED\n' +
   'ANALYZING...\n' +
@@ -45,7 +45,7 @@ var terminal_text_story =
   'USE WASD OR CURSOR KEYS TO MOVE, MOUSE TO SHOOT\n' +
   'CLICK TO INITIATE YOUR DEPLOYMENT\n ';
 
-var terminal_text_outro =
+const terminal_text_outro =
   'ALL SATELLITE LINKS ONLINE\n' +
   'CONNECTING...___' +
   'CONNECTION ESTABLISHED\n' +
@@ -66,13 +66,11 @@ var terminal_text_outro =
   'DOMINIC__' +
   'END OF TRANSMISSION';
 
-var terminal_text_buffer = [],
-  terminal_state = 0,
-  terminal_current_line,
-  terminal_line_wait = 100,
-  terminal_print_ident = true,
-  terminal_timeout_id = 0,
-  terminal_hide_timeout = 0;
+let terminal_text_buffer = [];
+let terminal_line_wait = 100;
+let terminal_print_ident = true;
+let terminal_timeout_id = 0;
+let terminal_hide_timeout = 0;
 
 terminal_text_garbage += terminal_text_garbage + terminal_text_garbage;
 
@@ -131,8 +129,8 @@ export function terminal_show_notice(notice, callback) {
 
   terminal_cancel();
   terminal_show();
-  terminal_write_text(terminal_prepare_text(notice), function() {
-    terminal_timeout_id = setTimeout(function() {
+  terminal_write_text(terminal_prepare_text(notice), () => {
+    terminal_timeout_id = setTimeout(() => {
       terminal_hide();
       callback && callback();
     }, 2000);
@@ -141,8 +139,8 @@ export function terminal_show_notice(notice, callback) {
 
 export function terminal_run_intro(callback) {
   terminal_text_buffer = [];
-  terminal_write_text(terminal_prepare_text(terminal_text_title), function() {
-    terminal_timeout_id = setTimeout(function() {
+  terminal_write_text(terminal_prepare_text(terminal_text_title), () => {
+    terminal_timeout_id = setTimeout(() => {
       terminal_run_garbage(callback);
     }, 4000);
   });
@@ -152,17 +150,18 @@ function terminal_run_garbage(callback) {
   terminal_print_ident = false;
   terminal_line_wait = 16;
 
-  var t = terminal_text_garbage,
-    length = terminal_text_garbage.length;
+  let t = terminal_text_garbage;
+  const length = terminal_text_garbage.length;
 
-  for (var i = 0; i < 64; i++) {
-    var s = (_math.random() * length) | 0;
-    var e = (_math.random() * (length - s)) | 0;
+  for (let i = 0; i < 64; i++) {
+    const s = (_math.random() * length) | 0;
+    const e = (_math.random() * (length - s)) | 0;
     t += terminal_text_garbage.substr(s, e) + '\n';
   }
+
   t += ' \n \n';
-  terminal_write_text(terminal_prepare_text(t), function() {
-    terminal_timeout_id = setTimeout(function() {
+  terminal_write_text(terminal_prepare_text(t), () => {
+    terminal_timeout_id = setTimeout(() => {
       terminal_run_story(callback);
     }, 1500);
   });

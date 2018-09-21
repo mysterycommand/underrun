@@ -32,25 +32,26 @@ export const _math = Math;
 export const _document = document;
 let _temp: any;
 
-export var keys = { 37: 0, 38: 0, 39: 0, 40: 0 };
-export var key_up = 38;
-export var key_down = 40;
-export var key_left = 37;
-export var key_right = 39;
-export var key_shoot = 512;
-export var key_convert = { 65: 37, 87: 38, 68: 39, 83: 40 }; // convert AWDS to left up down right
-export var mouse_x = 0;
-export var mouse_y = 0;
+export const keys = { 37: 0, 38: 0, 39: 0, 40: 0 };
+export const key_up = 38;
+export const key_down = 40;
+export const key_left = 37;
+export const key_right = 39;
+export const key_shoot = 512;
+export const key_convert = { 65: 37, 87: 38, 68: 39, 83: 40 }; // convert AWDS to left up down right
+export let mouse_x = 0;
+export let mouse_y = 0;
 
-export var time_elapsed;
-var time_last = performance.now();
+export let time_elapsed;
+let time_last = performance.now();
 
-export var level_width = 64;
-var level_height = 64;
-export var level_data = new Uint8Array(level_width * level_height);
+export const level_width = 64;
+const level_height = 64;
+export const level_data = new Uint8Array(level_width * level_height);
 
-export var cpus_total = 0;
-var cpus_rebooted = 0;
+export let cpus_total = 0;
+
+let cpus_rebooted = 0;
 export function get_cpus_rebooted() {
   return cpus_rebooted;
 }
@@ -58,8 +59,8 @@ export function set_cpus_rebooted(rebooted) {
   cpus_rebooted = rebooted;
 }
 
-export var current_level = 0;
-export var entity_player;
+export let current_level = 0;
+export let entity_player;
 export let entities: Entity[] = [];
 export let entitiesToKill: Entity[] = [];
 
@@ -70,7 +71,7 @@ export function load_image(name, callback) {
 }
 
 export function next_level(callback) {
-  if (current_level == 3) {
+  if (current_level === 3) {
     entitiesToKill.push(entity_player);
     terminal_run_outro();
   } else {
@@ -95,16 +96,16 @@ function load_level(id, callback) {
     _temp.drawImage(this, 0, 0);
     _temp = _temp.getImageData(0, 0, level_width, level_height).data;
 
-    for (var y = 0, index = 0; y < level_height; y++) {
-      for (var x = 0; x < level_width; x++, index++) {
+    for (let y = 0, index = 0; y < level_height; y++) {
+      for (let x = 0; x < level_width; x++, index++) {
         // reduce to 12 bit color to accurately match
-        var color_key =
+        const color_key =
           ((_temp[index * 4] >> 4) << 8) +
           ((_temp[index * 4 + 1] >> 4) << 4) +
           (_temp[index * 4 + 2] >> 4);
 
         if (color_key !== 0) {
-          var tile = (level_data[index] =
+          const tile = (level_data[index] =
             color_key === 0x888 // wall
               ? random_int(0, 5) < 4
                 ? 8
@@ -150,8 +151,7 @@ function load_level(id, callback) {
     }
 
     // Remove all spiders that spawned close to the player start
-    for (var i = 0; i < entities.length; i++) {
-      var e = entities[i];
+    for (const e of entities) {
       if (
         e instanceof Spider &&
         _math.abs(e.x - entity_player.x) < 64 &&
@@ -182,7 +182,7 @@ function preventDefault(ev) {
   ev.preventDefault();
 }
 
-_document.onkeydown = function(ev) {
+_document.onkeydown = ev => {
   _temp = ev.keyCode;
   _temp = key_convert[_temp] || _temp;
   if (keys[_temp] !== udef) {
@@ -191,7 +191,7 @@ _document.onkeydown = function(ev) {
   }
 };
 
-_document.onkeyup = function(ev) {
+_document.onkeyup = ev => {
   _temp = ev.keyCode;
   _temp = key_convert[_temp] || _temp;
   if (keys[_temp] !== udef) {
@@ -200,30 +200,30 @@ _document.onkeyup = function(ev) {
   }
 };
 
-_document.onmousemove = function(ev) {
+_document.onmousemove = ev => {
   mouse_x = (ev.clientX / c.clientWidth) * c.width;
   mouse_y = (ev.clientY / c.clientHeight) * c.height;
 };
 
-_document.onmousedown = function(ev) {
+_document.onmousedown = ev => {
   keys[key_shoot] = 1;
   preventDefault(ev);
 };
 
-_document.onmouseup = function(ev) {
+_document.onmouseup = ev => {
   keys[key_shoot] = 0;
   preventDefault(ev);
 };
 
 export function game_tick() {
-  var time_now = performance.now();
+  const time_now = performance.now();
   time_elapsed = (time_now - time_last) / 1000;
   time_last = time_now;
 
   renderer_prepare_frame();
 
   // update and render entities
-  for (var i = 0, e1, e2; i < entities.length; i++) {
+  for (let i = 0, e1, e2; i < entities.length; i++) {
     e1 = entities[i];
     if (e1.dead) {
       continue;
@@ -231,7 +231,7 @@ export function game_tick() {
     e1.update();
 
     // check for collisions between entities - it's quadratic and nobody cares \o/
-    for (var j = i + 1; j < entities.length; j++) {
+    for (let j = i + 1; j < entities.length; j++) {
       e2 = entities[j];
       if (
         !(
@@ -260,7 +260,7 @@ export function game_tick() {
   set_camera_z(get_camera_z() + get_camera_shake() * (_math.random() - 0.5));
 
   // health bar, render with plasma sprite
-  for (var i = 0; i < entity_player.h; i++) {
+  for (let i = 0; i < entity_player.h; i++) {
     push_sprite(
       -get_camera_x() - 50 + i * 4,
       29 - get_camera_y(),

@@ -19,7 +19,7 @@ import {
 import { terminal_show_notice } from './terminal';
 
 export default class Player extends Entity {
-  update() {
+  public update() {
     var t = this;
     var speed = 128;
 
@@ -45,8 +45,7 @@ export default class Player extends Entity {
       play(shoot);
       // prettier-ignore
       new Plasma(
-        t.x, 0, t.z,
-        0, 26,
+        t.x, 0, t.z, 0, 26,
         angle + _math.random() * 0.2 - 0.11,
       );
       t._last_shot = 0.1;
@@ -55,23 +54,7 @@ export default class Player extends Entity {
     super.update();
   }
 
-  render() {
-    this._frame++;
-    if (this._last_damage < 0 || this._frame % 6 < 4) {
-      super.render();
-    }
-    push_light(this.x, 4, this.z + 6, 1, 0.5, 0, 0.04);
-  }
-
-  kill() {
-    super.kill();
-    this.y = 10;
-    this.z += 5;
-    terminal_show_notice('DEPLOYMENT FAILED\n' + 'RESTORING BACKUP...');
-    setTimeout(reload_level, 3000);
-  }
-
-  receiveDamage(from, amount) {
+  public receiveDamage(from, amount) {
     if (this._last_damage < 0) {
       play(hurt);
       super.receiveDamage(from, amount);
@@ -79,7 +62,23 @@ export default class Player extends Entity {
     }
   }
 
+  public render() {
+    this._frame++;
+    if (this._last_damage < 0 || this._frame % 6 < 4) {
+      super.render();
+    }
+    push_light(this.x, 4, this.z + 6, 1, 0.5, 0, 0.04);
+  }
+
   protected init() {
     this._bob = this._last_shot = this._last_damage = this._frame = 0;
+  }
+
+  protected kill() {
+    super.kill();
+    this.y = 10;
+    this.z += 5;
+    terminal_show_notice('DEPLOYMENT FAILED\n' + 'RESTORING BACKUP...');
+    setTimeout(reload_level, 3000);
   }
 }

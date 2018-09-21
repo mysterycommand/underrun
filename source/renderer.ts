@@ -3,24 +3,26 @@ import { udef } from './game';
 import vertex_shader from './s/vert.glsl';
 import fragment_shader from './s/frag.glsl';
 
-var gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-var vertex_buffer;
-var shader_program;
+const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+let vertex_buffer;
+let shader_program;
 
-var texture_size = 1024;
-var tile_size = 16;
-var tile_fraction = tile_size / texture_size;
-var px_nudge = 0.5 / texture_size;
+const texture_size = 1024;
+const tile_size = 16;
+const tile_fraction = tile_size / texture_size;
+const px_nudge = 0.5 / texture_size;
 
-var max_verts = 1024 * 64;
-var num_verts = 0;
+const max_verts = 1024 * 64;
+
+let num_verts = 0;
 export function get_num_verts() {
   return num_verts;
 }
 export function set_num_verts(verts) {
   num_verts = verts;
 }
-var level_num_verts;
+
+let level_num_verts;
 export function get_level_num_verts() {
   return level_num_verts;
 }
@@ -29,11 +31,12 @@ export function set_level_num_verts(verts) {
 }
 
 // allow 64k verts, 8 properties per vert
-var buffer_data = new Float32Array(max_verts * 8);
+const buffer_data = new Float32Array(max_verts * 8);
 
-var light_uniform;
-var max_lights = 32;
-var num_lights = 0;
+let light_uniform;
+const max_lights = 32;
+
+let num_lights = 0;
 export function get_num_lights() {
   return num_lights;
 }
@@ -42,9 +45,9 @@ export function set_num_lights(lights) {
 }
 
 // 32 lights, 7 properties per light
-var light_data = new Float32Array(max_lights * 7);
+const light_data = new Float32Array(max_lights * 7);
 
-var camera_x = 0;
+let camera_x = 0;
 export function get_camera_x() {
   return camera_x;
 }
@@ -52,7 +55,7 @@ export function set_camera_x(x) {
   camera_x = x;
 }
 
-var camera_y = 0;
+let camera_y = 0;
 export function get_camera_y() {
   return camera_y;
 }
@@ -60,7 +63,7 @@ export function set_camera_y(y) {
   camera_y = y;
 }
 
-var camera_z = 0;
+let camera_z = 0;
 export function get_camera_z() {
   return camera_z;
 }
@@ -68,7 +71,7 @@ export function set_camera_z(z) {
   camera_z = z;
 }
 
-var camera_shake = 0;
+let camera_shake = 0;
 export function get_camera_shake() {
   return camera_shake;
 }
@@ -76,12 +79,12 @@ export function set_camera_shake(shake) {
   camera_shake = shake;
 }
 
-var camera_uniform;
+let camera_uniform;
 
 export function renderer_init() {
   // Create shorthand WebGL function names
   // var webglShortFunctionNames = {};
-  for (var name in gl) {
+  for (const name in gl) {
     if (gl[name].length != udef) {
       gl[name.match(/(^..|[A-Z]|\d.|v$)/g).join('')] = gl[name];
       // webglShortFunctionNames[name] = 'gl.'+name.match(/(^..|[A-Z]|\d.|v$)/g).join('');
@@ -121,7 +124,7 @@ export function renderer_init() {
 }
 
 export function renderer_bind_image(image) {
-  var texture_2d = gl.TEXTURE_2D;
+  const texture_2d = gl.TEXTURE_2D;
 
   gl.bindTexture(texture_2d, gl.createTexture());
   gl.texImage2D(texture_2d, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
@@ -160,7 +163,7 @@ function push_quad(
   nx, ny, nz,
   tile,
 ) {
-  var u = tile * tile_fraction + px_nudge;
+  const u = tile * tile_fraction + px_nudge;
   buffer_data.set(
     // prettier-ignore
     [
@@ -178,7 +181,7 @@ function push_quad(
 
 export function push_sprite(x, y, z, tile) {
   // tilt sprite when closer to camera
-  var tilt = 3 + (camera_z + z) / 12;
+  const tilt = 3 + (camera_z + z) / 12;
 
   // prettier-ignore
   push_quad(
@@ -204,7 +207,7 @@ export function push_floor(x, z, tile) {
 
 export function push_block(x, z, tile_top, tile_sites) {
   // tall blocks for certain tiles
-  var y = ~[8, 9, 17].indexOf(tile_sites) ? 16 : 8;
+  const y = ~[8, 9, 17].indexOf(tile_sites) ? 16 : 8;
 
   // prettier-ignore
   push_quad(
@@ -261,7 +264,7 @@ export function push_light(x, y, z, r, g, b, falloff) {
 }
 
 function compile_shader(shader_type, shader_source) {
-  var shader = gl.createShader(shader_type);
+  const shader = gl.createShader(shader_type);
   gl.shaderSource(shader, shader_source);
   gl.compileShader(shader);
   // console.log({ shaderInfoLog: gl.getShaderInfoLog(shader) });
@@ -269,7 +272,7 @@ function compile_shader(shader_type, shader_source) {
 }
 
 function enable_vertex_attrib(attrib_name, count, vertex_size, offset) {
-  var location = gl.getAttribLocation(shader_program, attrib_name);
+  const location = gl.getAttribLocation(shader_program, attrib_name);
   gl.enableVertexAttribArray(location);
   gl.vertexAttribPointer(
     location,

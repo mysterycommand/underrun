@@ -60,7 +60,7 @@ export default class Spider extends Entity {
     }
   }
 
-  protected receiveDamage(from, amount) {
+  public receiveDamage(from, amount) {
     super.receiveDamage(from, amount);
     this.vx = from.vx;
     this.vz = from.vz;

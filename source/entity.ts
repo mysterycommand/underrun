@@ -63,6 +63,13 @@ export default class Entity {
   // tslint:disable-next-line no-empty
   public check(other) {}
 
+  public receiveDamage(from, amount) {
+    this.h -= amount;
+    if (this.h <= 0) {
+      this.kill();
+    }
+  }
+
   public render() {
     // render
     const t = this;
@@ -86,13 +93,6 @@ export default class Entity {
   // collision against static walls
   // tslint:disable-next-line no-empty
   protected didCollide(x: number, y: number) {}
-
-  protected receiveDamage(from, amount) {
-    this.h -= amount;
-    if (this.h <= 0) {
-      this.kill();
-    }
-  }
 
   protected kill() {
     if (!this.dead) {
