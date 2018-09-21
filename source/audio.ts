@@ -1,7 +1,4 @@
-import {
-  sonantxr_generate_song,
-  sonantxr_generate_sound,
-} from './sonantx-reduced';
+import { generateSong, generateSound } from './sonantx-reduced';
 
 import { music_dark_meat_beat } from './music-dark-meat-beat';
 import {
@@ -25,36 +22,36 @@ export let terminal;
 export let explode;
 
 export function init(callback) {
-  sonantxr_generate_song(audioContext, music_dark_meat_beat, buffer => {
+  generateSong(audioContext, music_dark_meat_beat, buffer => {
     play(buffer, true);
     callback();
   });
 
-  sonantxr_generate_sound(audioContext, sound_shoot, 140, buffer => {
+  generateSound(audioContext, sound_shoot, 140, buffer => {
     shoot = buffer;
   });
 
-  sonantxr_generate_sound(audioContext, sound_hit, 134, buffer => {
+  generateSound(audioContext, sound_hit, 134, buffer => {
     hit = buffer;
   });
 
-  sonantxr_generate_sound(audioContext, sound_beep, 173, buffer => {
+  generateSound(audioContext, sound_beep, 173, buffer => {
     beep = buffer;
   });
 
-  sonantxr_generate_sound(audioContext, sound_hurt, 144, buffer => {
+  generateSound(audioContext, sound_hurt, 144, buffer => {
     hurt = buffer;
   });
 
-  sonantxr_generate_sound(audioContext, sound_pickup, 156, buffer => {
+  generateSound(audioContext, sound_pickup, 156, buffer => {
     pickup = buffer;
   });
 
-  sonantxr_generate_sound(audioContext, sound_terminal, 156, buffer => {
+  generateSound(audioContext, sound_terminal, 156, buffer => {
     terminal = buffer;
   });
 
-  sonantxr_generate_sound(audioContext, sound_explode, 114, buffer => {
+  generateSound(audioContext, sound_explode, 114, buffer => {
     explode = buffer;
   });
 }
