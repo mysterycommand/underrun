@@ -5,8 +5,8 @@ import { play, beep } from './audio';
 import {
   math,
   timeElapsed,
-  get_cpus_rebooted,
-  set_cpus_rebooted,
+  getCpusRebooted,
+  setCpusRebooted,
   cpusTotal,
   next_level,
   currentLevel,
@@ -31,14 +31,14 @@ export default class Cpu extends Entity {
   public check(other) {
     if (this.h === 5 && other instanceof Player) {
       this.h = 10;
-      set_cpus_rebooted(get_cpus_rebooted() + 1);
+      setCpusRebooted(getCpusRebooted() + 1);
 
       const rebootMessage = '\n\n\nREBOOTING..._' + 'SUCCESS\n';
 
-      if (cpusTotal - get_cpus_rebooted() > 0) {
+      if (cpusTotal - getCpusRebooted() > 0) {
         showNotice(
           rebootMessage +
-            (cpusTotal - get_cpus_rebooted()) +
+            (cpusTotal - getCpusRebooted()) +
             ' SYSTEM(S) STILL OFFLINE',
         );
       } else {

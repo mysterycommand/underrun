@@ -54,10 +54,10 @@ export const levelData = new Uint8Array(levelWidth * levelHeight);
 export let cpusTotal = 0;
 
 let cpusRebooted = 0;
-export function get_cpus_rebooted() {
+export function getCpusRebooted() {
   return cpusRebooted;
 }
-export function set_cpus_rebooted(rebooted) {
+export function setCpusRebooted(rebooted) {
   cpusRebooted = rebooted;
 }
 
