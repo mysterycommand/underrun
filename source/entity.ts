@@ -12,10 +12,13 @@ export default class Entity {
   public vx: number = 0;
   public vy: number = 0;
   public vz: number = 0;
+
   public h: number = 5;
+
   protected ax: number = 0;
   protected ay: number = 0;
   protected az: number = 0;
+
   protected dead: boolean = false;
 
   constructor(

@@ -10,8 +10,21 @@ attribute vec3 n;
 uniform vec3 cam;
 uniform float l[7 * 32];
 
-const mat4 v = mat4(1, 0, 0, 0, 0, 0.707, 0.707, 0, 0, -0.707, 0.707, 0, 0, -22.627, -22.627, 1); // view
-const mat4 r = mat4(0.977, 0, 0, 0, 0, 1.303, 0, 0, 0, 0, -1, -1, 0, 0, -2, 0); // projection
+// view
+const mat4 v = mat4(
+  1,   0,       0,     0,
+  0,   0.707,   0.707, 0,
+  0,  -0.707,   0.707, 0,
+  0, -22.627, -22.627, 1
+);
+
+// projection
+const mat4 r = mat4(
+  0.977, 0,     0,  0,
+  0,     1.303, 0,  0,
+  0,     0,    -1, -1,
+  0,     0,    -2,  0
+);
 
 void main(void) {
   vl = vec3(0.3, 0.3, 0.6); // ambient color
